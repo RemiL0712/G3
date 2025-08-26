@@ -67,22 +67,31 @@ window.addEventListener('DOMContentLoaded', () => {
         showPopup(`Тільки що купили ${bought} шт!`);
     }, 15000);
 
-    // Плавное переключение вкладок
+    // Плавное переключение вкладок (с учётом фиксированного хедера)
+    const headerOffset = document.querySelector('.site-header').offsetHeight;
+
     document.querySelectorAll('.tab-link').forEach(tab => {
-    tab.addEventListener('click', function (e) {
-        e.preventDefault();
+        tab.addEventListener('click', function (e) {
+            e.preventDefault();
 
-        // убираем и добавляем active у ссылок
-        document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
-        this.classList.add('active');
+            // убираем и добавляем active у ссылок
+            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+            this.classList.add('active');
 
-        // плавный скролл к нужной секции
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+            // плавный скролл к нужной секции
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const elementPosition = target.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
     });
-});
+
 
     // Плавное открытие FAQ вопросов
     const faqItems = document.querySelectorAll('.faq-item');
