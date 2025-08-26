@@ -1,168 +1,190 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Міні-лампа G3 - Преміум лендинг</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Міні-лампа G3 — Преміум лендинг</title>
+  <meta name="description" content="Міні-лампа G3 з бездротовою зарядкою — стиль, комфорт і швидка доставка по Україні.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- NAV -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">G3 Mini</div>
+      <nav class="nav">
+        <a class="nav-link tab-link active" href="#hero">Головна</a>
+        <a class="nav-link tab-link" href="#features">Переваги</a>
+        <a class="nav-link tab-link" href="#reviews">Відгуки</a>
+        <a class="nav-link tab-link" href="#order">Замовлення</a>
+        <a class="nav-link tab-link" href="#faq">FAQ</a>
+      </nav>
+    </div>
+  </header>
 
-<!-- Навигация -->
-<nav class="nav">
-    <a href="#hero" class="active">Головна</a>
-    <a href="#features">Переваги</a>
-    <a href="#reviews">Відгуки</a>
-    <a href="#order">Замовлення</a>
-    <a href="#faq">FAQ</a>
-</nav>
-
-<!-- Hero Section -->
-<section id="hero" class="hero">
-    <div class="hero-content container">
+  <!-- HERO -->
+  <section id="hero" class="hero tab-content">
+    <div class="container hero-grid">
+      <div class="hero-content">
         <h1 class="hero-title">Міні-лампа G3 з бездротовою зарядкою</h1>
-        <p class="hero-subtitle">Стильна, функціональна та створена для вашого комфорту.</p>
+        <p class="hero-subtitle">Стильна настільна лампа для роботи, навчання та відпочинку. Заряджайте смартфон без проводів і насолоджуйтесь м'яким світлом.</p>
         <ul class="hero-benefits">
-            <li>Бездротова зарядка прямо на вашому столі</li>
-            <li>Регульоване світло: тепле або холодне</li>
-            <li>Сучасний компактний дизайн</li>
-            <li>Енергозбереження та довговічність LED</li>
+          <li>Зарядка Qi 10W — швидко і зручно</li>
+          <li>Регульоване світло: 3 режими яскравості</li>
+          <li>Енергозбереження і довговічний LED</li>
         </ul>
-        <p class="offer">🔥 Знижка 20%! Час закінчення: <span id="timer">12:00:00</span></p>
-        <a href="#order" class="btn hero-btn">Купити зараз</a>
+        <div class="hero-cta">
+          <div class="offer">🔥 Знижка 20% — до кінця дня! Час: <span id="timer">12:00:00</span></div>
+          <a class="btn" href="#order">Купити зараз</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <!-- Placeholder image - replace with your product image -->
+        <img src="lamp.jpg" alt="Міні-лампа G3" class="product-img">
+        <div id="purchases-popup" class="purchases-popup" aria-hidden="true">Тільки що купили 3 шт!</div>
+      </div>
     </div>
-    <div class="hero-image">
-        <img src="lamp.jpg" alt="Міні-лампа G3">
-    </div>
-    <div id="purchases-popup" class="purchases-popup">Тільки що купили 3 шт!</div>
-</section>
+  </section>
 
-<!-- Features Section -->
-<section id="features" class="features">
+  <!-- FEATURES -->
+  <section id="features" class="features tab-content">
     <div class="container">
-        <h2>Переваги лампи G3</h2>
-        <div class="cards">
-            <div class="card feature">
-                <div class="icon">💡</div>
-                <h3>Бездротова зарядка</h3>
-                <p>Швидка і зручна зарядка смартфонів без зайвих проводів.</p>
-            </div>
-            <div class="card feature">
-                <div class="icon">🌈</div>
-                <h3>Регульоване освітлення</h3>
-                <p>Виберіть тепле або холодне світло під ваш настрій.</p>
-            </div>
-            <div class="card feature">
-                <div class="icon">🎨</div>
-                <h3>Сучасний дизайн</h3>
-                <p>Лаконічний і стильний дизайн під будь-який інтер'єр.</p>
-            </div>
-            <div class="card feature">
-                <div class="icon">⚡</div>
-                <h3>Енергозбереження</h3>
-                <p>LED лампи споживають мінімум електроенергії, зберігаючи яскравість.</p>
-            </div>
-            <div class="card feature">
-                <div class="icon">🖐️</div>
-                <h3>Просте управління</h3>
-                <p>Вмикайте та змінюйте рівень світла одним дотиком.</p>
-            </div>
-            <div class="card feature">
-                <div class="icon">📏</div>
-                <h3>Компактність</h3>
-                <p>Зручно переносити та розміщувати у будь-якому приміщенні.</p>
-            </div>
+      <h2>Переваги лампи G3</h2>
+      <p class="lead">Подумано до дрібниць: зарядка, комфортне світло та мінімалістичний дизайн.</p>
+      <div class="cards">
+        <div class="card">
+          <div class="icon">🔋</div>
+          <h3>Бездротова зарядка Qi</h3>
+          <p>Заряджайте телефон просто поклавши його на площадку — сумісність з більшістю смартфонів.</p>
         </div>
+        <div class="card">
+          <div class="icon">💡</div>
+          <h3>3 режими світла</h3>
+          <p>Тепле, нейтральне та холодне світло для роботи та відпочинку.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🎨</div>
+          <h3>Сучасний дизайн</h3>
+          <p>Лаконічна форма і матові матеріали — ідеально для дому чи офісу.</p>
+        </div>
+        <div class="card">
+          <div class="icon">⚡</div>
+          <h3>Енергоефективність</h3>
+          <p>LED-елементи служать довше і споживають менше електрики.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🖐️</div>
+          <h3>Просте управління</h3>
+          <p>Дотик для вмикання/регулювання — ніяких складних налаштувань.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📦</div>
+          <h3>Швидка доставка</h3>
+          <p>Доставка по Україні 1–5 робочих днів, можливість отримання на відділенні.</p>
+        </div>
+      </div>
     </div>
-</section>
+  </section>
 
-<!-- Reviews Section -->
-<section id="reviews" class="reviews">
+  <!-- REVIEWS -->
+  <section id="reviews" class="reviews tab-content">
     <div class="container">
-        <h2>Відгуки наших клієнтів</h2>
-        <div class="review-cards">
-            <div class="card">
-                <img src="olga.jpg" alt="Ольга" class="review-photo">
-                <p>«Лампа G3 змінила мій робочий простір – зручно і красиво.»</p>
-                <strong>– Ольга, Київ</strong>
-                <div class="stars">★★★★★</div>
-            </div>
-            <div class="card">
-                <img src="ivan.jpg" alt="Іван" class="review-photo">
-                <p>«Зручно регулювати світло, зарядка завжди під рукою.»</p>
-                <strong>– Іван, Львів</strong>
-                <div class="stars">★★★★★</div>
-            </div>
-            <div class="card">
-                <img src="anna.jpg" alt="Анна" class="review-photo">
-                <p>«Супер компактна, займає мало місця, але дуже ефективна.»</p>
-                <strong>– Анна, Харків</strong>
-                <div class="stars">★★★★★</div>
-            </div>
-            <div class="card">
-                <img src="sergiy.jpg" alt="Сергій" class="review-photo">
-                <p>«Я задоволений покупкою – чудове поєднання дизайну та функціоналу.»</p>
-                <strong>– Сергій, Одеса</strong>
-                <div class="stars">★★★★★</div>
-            </div>
-        </div>
-    </div>
-</section>
+      <h2>Відгуки наших клієнтів</h2>
+      <div class="review-cards">
 
-<!-- Order Section -->
-<section id="order" class="order">
+        <div class="card review">
+          <img src="olga.jpg" alt="Ольга" class="review-photo">
+          <p class="review-text">«Лампа G3 змінила мій робочий простір — зручно і красиво. Зарядка працює миттєво.»</p>
+          <strong class="review-author">– Ольга, Київ</strong>
+          <div class="stars">★★★★★</div>
+        </div>
+
+        <div class="card review">
+          <img src="andriy.jpg" alt="Андрій" class="review-photo">
+          <p class="review-text">«Замовив як подарунок — ідеально! Світло регулюється, зарядка зручна.»</p>
+          <strong class="review-author">– Андрій, Львів</strong>
+          <div class="stars">★★★★★</div>
+        </div>
+
+        <div class="card review">
+          <img src="maria.jpg" alt="Марія" class="review-photo">
+          <p class="review-text">«Компактна, стильна та дуже практична. Рекомендую для робочого столу.»</p>
+          <strong class="review-author">– Марія, Одеса</strong>
+          <div class="stars">★★★★★</div>
+        </div>
+
+        <div class="card review">
+          <img src="serhiy.jpg" alt="Сергій" class="review-photo">
+          <p class="review-text">«Доставили швидко. Якість відповідає опису, купив ще одну для брата.»</p>
+          <strong class="review-author">– Сергій, Харків</strong>
+          <div class="stars">★★★★☆</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDER -->
+  <section id="order" class="order tab-content">
     <div class="container">
-        <h2>Оформити замовлення</h2>
-        <form>
-            <label for="name">Ім'я:</label>
-            <input type="text" id="name" name="name" required>
+      <h2>Оформити замовлення</h2>
+      <form id="order-form">
+        <label for="name">Ім'я</label>
+        <input id="name" name="name" type="text" required>
 
-            <label for="phone">Телефон:</label>
-            <input type="tel" id="phone" name="phone" required>
+        <label for="phone">Телефон</label>
+        <input id="phone" name="phone" type="tel" required>
 
-            <label for="quantity">Кількість:</label>
-            <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
+        <label for="quantity">Кількість</label>
+        <input id="quantity" name="quantity" type="number" value="1" min="1" max="10">
 
-            <p class="total-price">Загальна сума: <span id="total">1499</span> ₴</p>
-            <button type="submit" class="btn">Замовити зараз</button>
-        </form>
+        <p class="total-price">Загальна сума: <strong id="total">1499</strong> ₴</p>
+
+        <button class="btn" type="submit">Замовити зараз</button>
+      </form>
+      <p class="guarantee">Гарантія 30 днів • Доставка 1–5 днів • Оплата: при отриманні або онлайн</p>
     </div>
-</section>
+  </section>
 
-<!-- FAQ Section -->
-<section id="faq" class="faq">
+  <!-- FAQ -->
+  <section id="faq" class="faq tab-content">
     <div class="container">
-        <h2>Часті питання</h2>
-        <div class="faq-item">
-            <h3>Чи є гарантія?</h3>
-            <p>Ми надаємо 30 днів гарантії на лампу.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Чи підходить зарядка для всіх смартфонів?</h3>
-            <p>Підтримуються всі смартфони з функцією бездротової зарядки Qi.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Які терміни доставки?</h3>
-            <p>Доставка по Україні займає від 1 до 5 робочих днів.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Чи безпечна лампа для дітей?</h3>
-            <p>Так, лампа не нагрівається і безпечна для використання в дитячій кімнаті.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Чи можна повернути товар?</h3>
-            <p>Так, протягом 14 днів при наявності товарного вигляду та упаковки.</p>
-        </div>
-    </div>
-</section>
+      <h2>Часті питання</h2>
 
-<!-- Footer -->
-<footer>
+      <div class="faq-item">
+        <h3>Чи є гарантія?</h3>
+        <p>Так — 30 днів гарантії. Якщо є дефект, повернемо гроші або замінимо.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Скільки триває доставка?</h3>
+        <p>В межах України — 1–5 робочих днів, залежно від регіону і служби доставки.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Чи підходить зарядка для всіх телефонів?</h3>
+        <p>Підтримуються смартфони з Qi-бездротовою зарядкою (більшість сучасних моделей).</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Чи потрібно щось налаштовувати?</h3>
+        <p>Ні — просто підключіть до живлення і використовуйте сенсорне управління.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Повернення і обмін</h3>
+        <p>Повернення протягом 14 днів при збереженому вигляді товару.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
     <div class="container">
-        <p>&copy; 2025 Міні-лампа G3 | Політика конфіденційності | Контакти</p>
+      <p>© 2025 G3 Mini • Політика конфіденційності • Контакти</p>
     </div>
-</footer>
+  </footer>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// premium_script.js
+// script.js
 
 // Таймер акции
 function startTimer(duration, display) {
@@ -29,14 +29,14 @@ window.addEventListener('DOMContentLoaded', () => {
     // Плавное появление элементов при скролле
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if(entry.isIntersecting) {
+            if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
             }
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.card, .faq-item').forEach(el => {
-        el.classList.add('hidden');
+    // Подключаем все нужные элементы
+    document.querySelectorAll('.card, .faq-item, .review').forEach(el => {
         observer.observe(el);
     });
 
@@ -57,71 +57,67 @@ window.addEventListener('DOMContentLoaded', () => {
     function showPopup(text) {
         const popup = document.querySelector('#purchases-popup');
         popup.textContent = text;
-        popup.style.opacity = 1;
-        setTimeout(() => { popup.style.opacity = 0; }, 3000);
+        popup.classList.add('show');
+        setTimeout(() => { popup.classList.remove('show'); }, 3000);
     }
 
+    // Имитируем случайные покупки
     setInterval(() => {
         let bought = Math.floor(Math.random() * 3) + 1;
         showPopup(`Тільки що купили ${bought} шт!`);
     }, 15000);
 
-    // Плавный скролл и подсветка активной ссылки навигации
-    const navLinks = document.querySelectorAll('.nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            target.scrollIntoView({ behavior: 'smooth' });
+    // Плавное переключение вкладок
+    document.querySelectorAll('.tab-link').forEach(tab => {
+    tab.addEventListener('click', function (e) {
+        e.preventDefault();
 
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
+        // убираем и добавляем active у ссылок
+        document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+        this.classList.add('active');
+
+        // плавный скролл к нужной секции
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
+});
 
-    // Плавное открытие FAQ
+    // Плавное открытие FAQ вопросов
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
-        const question = item.querySelector('h3');
-        const answer = item.querySelector('p');
-        answer.style.maxHeight = '0';
-        answer.style.overflow = 'hidden';
-        answer.style.transition = 'max-height 0.5s ease-out, opacity 0.5s ease';
-        answer.style.opacity = 0;
+        const q = item.querySelector('h3');
+        const a = item.querySelector('p');
+        a.style.maxHeight = '0';
+        a.style.overflow = 'hidden';
+        a.style.transition = 'max-height 0.45s ease, opacity 0.35s ease';
+        a.style.opacity = 0;
 
-        question.addEventListener('click', () => {
-            if(answer.style.maxHeight === '0px' || answer.style.maxHeight === '0'){
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-                answer.style.opacity = 1;
+        q.addEventListener('click', () => {
+            if (a.style.maxHeight === '0px' || a.style.maxHeight === '0') {
+                a.style.maxHeight = a.scrollHeight + 'px';
+                a.style.opacity = 1;
             } else {
-                answer.style.maxHeight = '0';
-                answer.style.opacity = 0;
+                a.style.maxHeight = '0';
+                a.style.opacity = 0;
             }
         });
     });
 
-    // Вкладки характеристик, отзывов и FAQ с плавной анимацией
-    const tabs = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-                content.style.opacity = 0;
-            });
-
-            const activeContent = tabContents[index];
-            activeContent.style.display = 'block';
-            setTimeout(() => { activeContent.style.opacity = 1; }, 50);
+    // Form submit - simple confirmation (frontend only)
+    const orderForm = document.querySelector('#order-form');
+    if (orderForm) {
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.querySelector('#name').value.trim();
+            const phone = document.querySelector('#phone').value.trim();
+            const qty = document.querySelector('#quantity').value;
+            const total = document.querySelector('#total').textContent;
+            alert(`Дякуємо, ${name}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`);
+            orderForm.reset();
+            document.querySelector('#quantity').value = 1;
+            document.querySelector('#total').textContent = pricePerItem;
         });
-    });
-
-    // Инициализация первой вкладки
-    if(tabs.length > 0){
-        tabs[0].click();
     }
 });
