@@ -191,7 +191,42 @@ function setupMobileMenu() {
   }
 }
 
+/**
+ * Налаштовує функціональність каруселі з анімацією.
+ */
+function setupCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const nextButton = document.querySelector('.carousel-button.next');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    let currentSlideIndex = 0;
 
+    if (!slides.length || !nextButton || !prevButton) {
+        return;
+    }
+
+    // Функція для показу певного слайда
+    function showSlide(index) {
+        // Прибираємо клас 'active' з усіх слайдів
+        slides.forEach(slide => slide.classList.remove('active'));
+        // Додаємо клас 'active' до обраного слайда
+        slides[index].classList.add('active');
+    }
+
+    // Обробник натискання кнопки "наступний"
+    nextButton.addEventListener('click', () => {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        showSlide(currentSlideIndex);
+    });
+
+    // Обробник натискання кнопки "попередній"
+    prevButton.addEventListener('click', () => {
+        currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+        showSlide(currentSlideIndex);
+    });
+
+    // Показуємо перший слайд при завантаженні
+    showSlide(currentSlideIndex);
+}
 // === Ініціалізація всіх скриптів після завантаження DOM ===
 document.addEventListener('DOMContentLoaded', () => {
   const timerDisplay = document.querySelector('#timer');
@@ -203,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupOrderPriceUpdate();
   setupPurchasesPopup();
   setupSmoothScroll();
-  setupFaqAccordions();
   setupOrderForm();
   setupMobileMenu();
+  setupCarousel();
 });
