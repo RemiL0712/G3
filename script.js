@@ -1,43 +1,50 @@
 // script.js
 
-// Таймер акции
-function startTimer(duration, display) {
-    let timer = duration;
-    let hours, minutes, seconds;
-    setInterval(function () {
-        hours = Math.floor(timer / 3600);
-        minutes = Math.floor((timer % 3600) / 60);
-        seconds = timer % 60;
+// Таймер до конца дня с учетом коммента Артема
+function startTimer(display) {
+    function updateTimer() {
+        const now = new Date();
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999); // конец текущего дня
+        let diff = Math.floor((endOfDay - now) / 1000);
 
-        hours = hours < 10 ? '0' + hours : hours;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        seconds = seconds < 10 ? '0' + seconds : seconds;
+        if (diff < 0) diff = 0; // если уже конец дня
 
-        display.textContent = hours + ':' + minutes + ':' + seconds;
+        const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        const seconds = String(diff % 60).padStart(2, '0');
 
-        if (timer > 0) {
-            timer--;
-        }
-    }, 1000);
+        display.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    updateTimer(); // обновить сразу при загрузке
+    setInterval(updateTimer, 1000); // обновлять каждую секунду
 }
 
+
 window.addEventListener('DOMContentLoaded', () => {
+    // Таймер
     const display = document.querySelector('#timer');
-    const actionTime = 12 * 60 * 60; // 12 часов
-    startTimer(actionTime, display);
+    if (display) {
+        startTimer(display);
+    }
 
-    // Плавное появление элементов при скролле
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
+    // Плавное появление элементов при скролле - с fallback'ом
+    let observer = null;
+    if ('IntersectionObserver' in window) {
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+    }
 
-    // Подключаем все нужные элементы
+    // Подключаем все нужные элементы (если observer нет — делаем их видимыми сразу)
     document.querySelectorAll('.card, .faq-item, .review').forEach(el => {
-        observer.observe(el);
+        if (observer) observer.observe(el);
+        else el.classList.add('visible');
     });
 
     // Обновление итоговой суммы
@@ -45,30 +52,39 @@ window.addEventListener('DOMContentLoaded', () => {
     const totalPriceEl = document.querySelector('#total');
     const pricePerItem = 1499;
 
-    quantityInput.addEventListener('input', () => {
-        let qty = parseInt(quantityInput.value);
-        if (isNaN(qty) || qty < 1) qty = 1;
-        if (qty > 10) qty = 10;
-        quantityInput.value = qty;
-        totalPriceEl.textContent = qty * pricePerItem;
-    });
+    if (quantityInput && totalPriceEl) {
+        quantityInput.addEventListener('input', () => {
+            let qty = parseInt(quantityInput.value);
+            if (isNaN(qty) || qty < 1) qty = 1;
+            if (qty > 10) qty = 10;
+            quantityInput.value = qty;
+            totalPriceEl.textContent = qty * pricePerItem;
+        });
+    }
+
 
     // Показываем popup покупок
     function showPopup(text) {
         const popup = document.querySelector('#purchases-popup');
-        popup.textContent = text;
-        popup.classList.add('show');
-        setTimeout(() => { popup.classList.remove('show'); }, 3000);
+        if (popup) {
+            popup.textContent = text;
+            popup.classList.add('show');
+            setTimeout(() => { popup.classList.remove('show'); }, 3000);
+        }
     }
 
-    // Имитируем случайные покупки
-    setInterval(() => {
-        let bought = Math.floor(Math.random() * 3) + 1;
-        showPopup(`Тільки що купили ${bought} шт!`);
-    }, 15000);
+    if (document.querySelector('#purchases-popup')) {
+        setInterval(() => {
+            let bought = Math.floor(Math.random() * 3) + 1;
+            showPopup(`Тільки що купили ${bought} шт!`);
+        }, 15000);
+    }
+
 
     // Плавное переключение вкладок (с учётом фиксированного хедера)
-    const headerOffset = document.querySelector('.site-header').offsetHeight;
+    const header = document.querySelector('.site-header');
+    const headerOffset = header ? header.offsetHeight : 0;
+
 
     document.querySelectorAll('.tab-link').forEach(tab => {
         tab.addEventListener('click', function (e) {
@@ -93,11 +109,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Плавное открытие FAQ вопросов
+    // Плавное открытие FAQ вопросов (с проверками наличия h3 и p)
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
         const q = item.querySelector('h3');
         const a = item.querySelector('p');
+        if (!q || !a) return; // если структура не та — пропускаем
+
         a.style.maxHeight = '0';
         a.style.overflow = 'hidden';
         a.style.transition = 'max-height 0.45s ease, opacity 0.35s ease';
@@ -114,19 +132,36 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Form submit - simple confirmation (frontend only)
+    // Form submit - красивое подтверждение через модалку (без ошибок, если поля отсутствуют)
     const orderForm = document.querySelector('#order-form');
-    if (orderForm) {
+    const modal = document.querySelector('#order-success');
+    const modalText = document.querySelector('#order-success-text');
+    const modalClose = document.querySelector('#order-success-close');
+
+    if (orderForm && modal && modalText && modalClose) {
         orderForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.querySelector('#name').value.trim();
-            const phone = document.querySelector('#phone').value.trim();
-            const qty = document.querySelector('#quantity').value;
-            const total = document.querySelector('#total').textContent;
-            alert(`Дякуємо, ${name}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`);
+
+            const nameEl = document.querySelector('#name');
+            const phoneEl = document.querySelector('#phone');
+            const qtyEl = quantityInput || document.querySelector('#quantity');
+            const totalEl = totalPriceEl || document.querySelector('#total');
+
+            const name = nameEl ? nameEl.value.trim() : '';
+            const phone = phoneEl ? phoneEl.value.trim() : '';
+            const qty = qtyEl ? qtyEl.value : '1';
+            const total = totalEl ? totalEl.textContent : String((parseInt(qty) || 1) * pricePerItem);
+
+            modalText.textContent = `Дякуємо, ${name || 'клієнт'}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`;
+            modal.classList.add('show');
+
             orderForm.reset();
-            document.querySelector('#quantity').value = 1;
-            document.querySelector('#total').textContent = pricePerItem;
+            if (qtyEl) qtyEl.value = 1;
+            if (totalEl) totalEl.textContent = pricePerItem;
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('show');
         });
     }
 });
