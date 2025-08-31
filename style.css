@@ -2,6 +2,16 @@
   Базові стилі та допоміжні класи
   ==================================================*/
 
+:root {
+  --primary-color: #2ecc71;
+  --secondary-color: #27ae60;
+  --accent-color: #ffb347;
+  --text-color: #222;
+  --light-text-color: #f0f2f5;
+  --bg-color: #f6f7fb;
+  --card-bg-color: #fff;
+}
+
 /* Загальні налаштування для всіх елементів */
 * {
   box-sizing: border-box;
@@ -12,8 +22,8 @@
 /* Стилі для основного тіла документа */
 body {
   font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-  background-color: #f6f7fb;
-  color: #222;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.6;
   scroll-behavior: smooth;
 }
@@ -29,7 +39,7 @@ body {
 .btn {
   display: inline-block;
   padding: 14px 28px;
-  background: linear-gradient(90deg, #ff7a18, #ffb347);
+  background: linear-gradient(90deg, #ff7a18, var(--accent-color));
   color: #fff;
   border-radius: 12px;
   text-decoration: none;
@@ -63,7 +73,7 @@ body {
 
 /* Стилі для шапки сайту */
 .site-header {
-  background-color: #fff;
+  background-color: var(--card-bg-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
@@ -80,7 +90,7 @@ body {
 /* Стилі для логотипу */
 .logo {
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--primary-color);
   font-size: 1.2rem;
   text-decoration: none;
 }
@@ -104,7 +114,7 @@ body {
 }
 
 .nav-link.active {
-  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   color: white;
   box-shadow: 0 6px 18px rgba(46, 204, 113, 0.15);
 }
@@ -135,7 +145,7 @@ body {
 
 .hero {
   padding: 48px 0;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
   color: white;
 }
 
@@ -290,13 +300,13 @@ body {
 
 .features {
   padding: 56px 0;
-  background-color: #fff;
+  background-color: var(--card-bg-color);
 }
 
 .features h2 {
   text-align: center;
   margin-bottom: 12px;
-  color: #1a7f53;
+  color: var(--secondary-color);
 }
 
 .features .lead {
@@ -313,7 +323,7 @@ body {
 }
 
 .card {
-  background-color: #fff;
+  background-color: var(--card-bg-color);
   border-radius: 14px;
   padding: 20px;
   width: 300px;
@@ -337,13 +347,13 @@ body {
   ==================================================*/
   
 .reviews {
-  padding: 40px 0; /* Зменшуємо відступ зверху і знизу */
+  padding: 40px 0;
   background-color: #f0f2f5;
 }
 
 .reviews h2 {
   text-align: center;
-  margin-bottom: 25px; /* Зменшуємо відступ */
+  margin-bottom: 25px;
   color: #333;
 }
 
@@ -353,9 +363,9 @@ body {
 }
 
 .review-card {
-  background: #fff;
+  background: var(--card-bg-color);
   border-radius: 16px;
-  padding: 20px 25px; /* Зменшуємо внутрішні відступи */
+  padding: 20px 25px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   text-align: center;
   flex-shrink: 0;
@@ -364,7 +374,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 180px; /* Зменшуємо мінімальну висоту картки */
+  min-height: 180px;
 }
 
 .review-stars {
@@ -376,12 +386,12 @@ body {
 .review-text {
   font-style: italic;
   font-size: 1rem;
-  margin: 10px 0; /* Зменшуємо відступи зверху і знизу */
+  margin: 10px 0;
   color: #555;
   flex-grow: 1;
   display: flex;
   align-items: center;
-  justify-content: center; /* Додаємо, щоб текст центрувався навіть якщо він короткий */
+  justify-content: center;
 }
 
 .review-author {
@@ -395,7 +405,7 @@ body {
   display: flex;
   transition: transform 0.5s ease-in-out;
   width: 100%;
-  min-height: 220px; /* Встановлюємо мінімальну висоту для контейнера */
+  min-height: 220px;
 }
 
 
@@ -425,7 +435,7 @@ body {
   max-width: 500px;
   margin: 0 auto;
   padding: 30px;
-  background-color: #fff;
+  background-color: var(--card-bg-color);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
@@ -444,7 +454,7 @@ body {
 }
 
 .order-form-container input:focus {
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
   outline: none;
 }
@@ -481,13 +491,13 @@ body {
 
 .faq {
   padding: 56px 0;
-  background-color: #f6f7fb;
+  background-color: var(--bg-color);
 }
 
 .faq h2 {
   text-align: center;
   margin-bottom: 18px;
-  color: #1a7f53;
+  color: var(--secondary-color);
 }
 
 .faq-item {
@@ -510,7 +520,7 @@ body {
 }
 
 .faq-question:hover {
-    color: #2ecc71;
+    color: var(--primary-color);
 }
 
 .faq-question::after {
@@ -527,7 +537,7 @@ body {
 
 .faq-question.active::after {
     transform: translateY(-50%) rotate(180deg);
-    color: #2ecc71;
+    color: var(--primary-color);
 }
 
 .faq-answer {
@@ -554,7 +564,7 @@ body {
   right: 25px;
   z-index: 99;
   color: #fff;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   width: 50px;
   height: 50px;
   display: flex;
@@ -564,9 +574,9 @@ body {
   text-decoration: none;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   /* ===== Властивості для плавного переходу ===== */
-  opacity: 0; /* Спочатку робимо її повністю прозорою */
-  visibility: hidden; /* Приховуємо, щоб не можна було клікнути */
-  transform: translateY(20px); /* Трохи опускаємо її, щоб створити ефект "виїзду" */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
   transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
@@ -577,9 +587,9 @@ body {
 }
 
 .back-to-top.show {
-  opacity: 1; /* Робимо видимою */
-  visibility: visible; /* Робимо клікабельною */
-  transform: translateY(0); /* Повертаємо на місце */
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 /*==================================================
@@ -588,13 +598,13 @@ body {
   
 .site-footer {
   background-color: #333;
-  color: #f0f2f5;
+  color: var(--light-text-color);
   padding: 50px 0;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr; /* Змінено з 3 на 2 стовпці */
+  grid-template-columns: 2fr 1fr;
   gap: 40px;
   align-items: flex-start;
 }
@@ -602,7 +612,7 @@ body {
 .footer-logo {
   font-weight: 700;
   font-size: 1.5rem;
-  color: #2ecc71;
+  color: var(--primary-color);
   text-decoration: none;
   margin-bottom: 10px;
   display: inline-block;
@@ -637,7 +647,7 @@ body {
 }
 
 .footer-links a:hover {
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 
 @media (max-width: 768px) {
@@ -671,7 +681,7 @@ body {
 }
 
 .modal-content {
-  background: #fff;
+  background: var(--card-bg-color);
   padding: 20px 30px;
   border-radius: 12px;
   text-align: center;
@@ -742,7 +752,7 @@ body {
     top: 100%;
     left: 0;
     width: 100%;
-    background: #fff;
+    background: var(--card-bg-color);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
     transform: translateY(-100%);

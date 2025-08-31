@@ -31,58 +31,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /**
    * Налаштовує карусель із кнопками навігації та автопрокруткою.
+   * @param {string} containerSelector - Селектор для контейнера каруселі.
    */
-  /**
- * Налаштовує карусель із кнопками навігації та автопрокруткою.
- * @param {string} containerSelector - Селектор для контейнера каруселі.
- */
-function setupCarousel(containerSelector) {
-  const container = document.querySelector(containerSelector);
-  if (!container) return;
+  function setupCarousel(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return;
 
-  const slides = container.querySelectorAll('.carousel-slide');
-  const nextButton = container.querySelector('.carousel-button.next');
-  const prevButton = container.querySelector('.carousel-button.prev');
-  let currentSlideIndex = 0;
-  let autoScrollInterval;
+    const slides = container.querySelectorAll('.carousel-slide');
+    const nextButton = container.querySelector('.carousel-button.next');
+    const prevButton = container.querySelector('.carousel-button.prev');
+    let currentSlideIndex = 0;
+    let autoScrollInterval;
 
-  if (!slides.length || !nextButton || !prevButton) {
-    return;
-  }
+    if (!slides.length || !nextButton || !prevButton) {
+      return;
+    }
 
-  function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    slides[index].classList.add('active');
-  }
+    // Показує слайд за індексом, приховуючи інші
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[index].classList.add('active');
+    }
 
-  function nextSlide() {
-    currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+    // Переходить до наступного слайда
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+      showSlide(currentSlideIndex);
+    }
+
+    // Запускає автопрокрутку
+    function startAutoScroll() {
+      stopAutoScroll();
+      autoScrollInterval = setInterval(nextSlide, 5000);
+    }
+
+    // Зупиняє автопрокрутку
+    function stopAutoScroll() {
+      clearInterval(autoScrollInterval);
+    }
+
+    // Обробник для кнопки "Вперед"
+    nextButton.addEventListener('click', () => {
+      nextSlide();
+      startAutoScroll(); // Перезапускає таймер автопрокрутки після кліку
+    });
+
+    // Обробник для кнопки "Назад"
+    prevButton.addEventListener('click', () => {
+      currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+      showSlide(currentSlideIndex);
+      startAutoScroll(); // Перезапускає таймер автопрокрутки після кліку
+    });
+
+    // Ініціалізація
     showSlide(currentSlideIndex);
-  }
-
-  function startAutoScroll() {
-    stopAutoScroll();
-    autoScrollInterval = setInterval(nextSlide, 5000);
-  }
-
-  function stopAutoScroll() {
-    clearInterval(autoScrollInterval);
-  }
-
-  nextButton.addEventListener('click', () => {
-    nextSlide();
     startAutoScroll();
-  });
-
-  prevButton.addEventListener('click', () => {
-    currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-    showSlide(currentSlideIndex);
-    startAutoScroll();
-  });
-
-  showSlide(currentSlideIndex);
-  startAutoScroll();
-}
+  }
 
   /**
    * Обробляє плавний скролінг до секцій та оновлює активний пункт меню.
@@ -95,6 +99,7 @@ function setupCarousel(containerSelector) {
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
+        // Оновлює активний клас для навігаційних посилань
         navLinks.forEach(item => item.classList.remove('active'));
         this.classList.add('active');
 
@@ -121,7 +126,7 @@ function setupCarousel(containerSelector) {
     if (quantityInput && totalPriceEl) {
       quantityInput.addEventListener('input', () => {
         let qty = parseInt(quantityInput.value) || 1;
-        qty = Math.max(1, Math.min(10, qty));
+        qty = Math.max(1, Math.min(10, qty)); // Обмежує кількість від 1 до 10
         quantityInput.value = qty;
         totalPriceEl.textContent = qty * PRICE_PER_ITEM;
       });
@@ -153,21 +158,28 @@ function setupCarousel(containerSelector) {
     const modalText = document.querySelector('#order-success-text');
     const modalClose = document.querySelector('#order-success-close');
 
+    // Отримання посилань на елементи форми один раз
+    const nameInput = document.querySelector('#name');
+    const phoneInput = document.querySelector('#phone');
+    const quantityInput = document.querySelector('#quantity');
+    const totalElement = document.querySelector('#total');
+
     if (orderForm && modal && modalText && modalClose) {
       orderForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const name = document.querySelector('#name')?.value.trim() || 'клієнт';
-        const phone = document.querySelector('#phone')?.value.trim() || '';
-        const qty = document.querySelector('#quantity')?.value || '1';
-        const total = document.querySelector('#total')?.textContent || String((parseInt(qty) || 1) * PRICE_PER_ITEM);
+        const name = nameInput?.value.trim() || 'клієнт';
+        const phone = phoneInput?.value.trim() || '';
+        const qty = quantityInput?.value || '1';
+        const total = totalElement?.textContent || String((parseInt(qty) || 1) * PRICE_PER_ITEM);
 
         modalText.textContent = `Дякуємо, ${name}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`;
         modal.classList.add('show');
 
         orderForm.reset();
-        document.querySelector('#quantity').value = 1;
-        document.querySelector('#total').textContent = PRICE_PER_ITEM;
+        // Скидаємо значення кількості та загальної суми до початкових
+        if (quantityInput) quantityInput.value = 1;
+        if (totalElement) totalElement.textContent = PRICE_PER_ITEM;
       });
 
       modalClose.addEventListener('click', () => {
@@ -180,29 +192,32 @@ function setupCarousel(containerSelector) {
    * Налаштовує поведінку акордеона для секції FAQ.
    */
   function setupFaqAccordions() {
-    const faqQuestions = document.querySelectorAll('.faq-question');
-    if (!faqQuestions.length) return;
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (!faqItems.length) return;
 
-    faqQuestions.forEach(question => {
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+      if (!question || !answer) return;
+
       question.addEventListener('click', () => {
-        const answer = question.nextElementSibling;
         const isActive = question.classList.contains('active');
 
         // Закриваємо всі інші відкриті відповіді
-        faqQuestions.forEach(q => {
-          q.classList.remove('active');
-          if (q.nextElementSibling) {
-            q.nextElementSibling.style.display = 'none';
+        faqItems.forEach(i => {
+          const q = i.querySelector('.faq-question');
+          const a = i.querySelector('.faq-answer');
+          if (q && a) {
+            if (q !== question) { // Перевірка, щоб не закрити поточний елемент
+              q.classList.remove('active');
+              a.style.display = 'none';
+            }
           }
         });
 
-        // Відкриваємо відповідь, якщо вона не була активною
-        if (!isActive) {
-          question.classList.add('active');
-          if (answer) {
-            answer.style.display = 'block';
-          }
-        }
+        // Відкриваємо/закриваємо поточну відповідь
+        question.classList.toggle('active');
+        answer.style.display = isActive ? 'none' : 'block';
       });
     });
   }
@@ -211,11 +226,11 @@ function setupCarousel(containerSelector) {
    * Ініціалізує анімації на основі скролінгу.
    */
   function setupScrollAnimations() {
-    const elementsToAnimate = document.querySelectorAll('.card, .faq-item, .review');
+    const elementsToAnimate = document.querySelectorAll('.card, .faq-item, .review-card');
     if (!elementsToAnimate.length) return;
 
     if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
+      const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
@@ -234,21 +249,20 @@ function setupCarousel(containerSelector) {
   }
 
   /**
-   * 
- * Показує/ховає кнопку "Нагору" в залежності від скролінгу.
- */
-function setupBackToTopButton() {
-  const backToTopButton = document.querySelector('#back-to-top');
-  if (!backToTopButton) return;
+   * Показує/ховає кнопку "Нагору" в залежності від скролінгу.
+   */
+  function setupBackToTopButton() {
+    const backToTopButton = document.querySelector('#back-to-top');
+    if (!backToTopButton) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) { // Показуємо кнопку, якщо прокручено більше 300px
-      backToTopButton.classList.add('show');
-    } else {
-      backToTopButton.classList.remove('show');
-    }
-  });
-}
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.classList.add('show');
+      } else {
+        backToTopButton.classList.remove('show');
+      }
+    });
+  }
 
 
   // === Ініціалізація всіх скриптів ===
@@ -256,10 +270,10 @@ function setupBackToTopButton() {
   if (timerDisplay) {
     startTimer(timerDisplay);
   }
-  
+
   setupBackToTopButton();
-  setupCarousel('.hero-media'); // Для каруселі фотографій
-  setupCarousel('.review-carousel'); // Для нової каруселі відгуків
+  setupCarousel('.hero-media');
+  setupCarousel('.review-carousel');
   setupSmoothScroll();
   setupOrderPriceUpdate();
   setupMobileMenu();
