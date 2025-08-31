@@ -1,167 +1,212 @@
-// script.js
+// === Допоміжні функції ===
 
-// Таймер до конца дня с учетом коммента Артема
+/**
+ * Запускає таймер зворотного відліку до кінця дня.
+ * @param {HTMLElement} display - Елемент для відображення таймера.
+ */
 function startTimer(display) {
-    function updateTimer() {
-        const now = new Date();
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999); // конец текущего дня
-        let diff = Math.floor((endOfDay - now) / 1000);
+  function updateTimer() {
+    const now = new Date();
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    let diff = Math.floor((endOfDay - now) / 1000);
 
-        if (diff < 0) diff = 0; // если уже конец дня
+    if (diff < 0) diff = 0;
 
-        const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
-        const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-        const seconds = String(diff % 60).padStart(2, '0');
+    const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const seconds = String(diff % 60).padStart(2, '0');
 
-        display.textContent = `${hours}:${minutes}:${seconds}`;
-    }
+    display.textContent = `${hours}:${minutes}:${seconds}`;
+  }
 
-    updateTimer(); // обновить сразу при загрузке
-    setInterval(updateTimer, 1000); // обновлять каждую секунду
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+
+/**
+ * Обробляє плавну появу елементів при скролінгу за допомогою IntersectionObserver.
+ */
+function setupScrollAnimations() {
+  const elementsToAnimate = document.querySelectorAll('.card, .faq-item, .review');
+  if (!elementsToAnimate.length) return;
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target); // Одноразова анімація
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    elementsToAnimate.forEach(el => observer.observe(el));
+  } else {
+    // Fallback для старих браузерів
+    elementsToAnimate.forEach(el => el.classList.add('visible'));
+  }
+}
+
+/**
+ * Оновлює загальну суму замовлення на основі кількості товару.
+ */
+function setupOrderPriceUpdate() {
+  const quantityInput = document.querySelector('#quantity');
+  const totalPriceEl = document.querySelector('#total');
+  const pricePerItem = 1499;
+
+  if (quantityInput && totalPriceEl) {
+    quantityInput.addEventListener('input', () => {
+      let qty = parseInt(quantityInput.value) || 1;
+      qty = Math.max(1, Math.min(10, qty)); // Обмеження від 1 до 10
+      quantityInput.value = qty;
+      totalPriceEl.textContent = qty * pricePerItem;
+    });
+  }
+}
+
+/**
+ * Показ спливаючого вікна "покупок" з імітацією активності.
+ */
+function setupPurchasesPopup() {
+  const popup = document.querySelector('#purchases-popup');
+  if (!popup) return;
+
+  function showPopup(text) {
+    popup.textContent = text;
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 3000);
+  }
+
+  setInterval(() => {
+    const bought = Math.floor(Math.random() * 3) + 1;
+    showPopup(`Тільки що купили ${bought} шт!`);
+  }, 15000);
+}
+
+/**
+ * Налаштовує плавний скролінг до секцій з урахуванням висоти шапки.
+ */
+function setupSmoothScroll() {
+  const headerOffset = document.querySelector('.site-header')?.offsetHeight || 0;
+
+  document.querySelectorAll('.tab-link').forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+      this.classList.add('active');
+
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const elementPosition = target.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Реалізує логіку розкриття-згортання FAQ-питань.
+ */
+function setupFaqAccordions() {
+  const faqQuestions = document.querySelectorAll('.faq-question');
+  faqQuestions.forEach(question => {
+    const answer = question.nextElementSibling;
+    if (!answer) return;
+
+    question.addEventListener('click', () => {
+      const isActive = question.classList.contains('active');
+
+      // Закриття всіх відкритих питань
+      faqQuestions.forEach(q => {
+        q.classList.remove('active');
+        q.nextElementSibling.style.display = 'none';
+      });
+
+      // Якщо поточне питання не було активним, відкриваємо його
+      if (!isActive) {
+        question.classList.add('active');
+        answer.style.display = 'block';
+      }
+    });
+  });
+}
+
+/**
+ * Обробляє відправку форми та відображає модальне вікно підтвердження.
+ */
+function setupOrderForm() {
+  const orderForm = document.querySelector('#order-form');
+  const modal = document.querySelector('#order-success');
+  const modalText = document.querySelector('#order-success-text');
+  const modalClose = document.querySelector('#order-success-close');
+  const pricePerItem = 1499;
+
+  if (orderForm && modal && modalText && modalClose) {
+    orderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameEl = document.querySelector('#name');
+      const phoneEl = document.querySelector('#phone');
+      const qtyEl = document.querySelector('#quantity');
+      const totalEl = document.querySelector('#total');
+
+      const name = nameEl ? nameEl.value.trim() : '';
+      const phone = phoneEl ? phoneEl.value.trim() : '';
+      const qty = qtyEl ? qtyEl.value : '1';
+      const total = totalEl ? totalEl.textContent : String((parseInt(qty) || 1) * pricePerItem);
+
+      modalText.textContent = `Дякуємо, ${name || 'клієнт'}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`;
+      modal.classList.add('show');
+
+      orderForm.reset();
+      if (qtyEl) qtyEl.value = 1;
+      if (totalEl) totalEl.textContent = pricePerItem;
+    });
+
+    modalClose.addEventListener('click', () => {
+      modal.classList.remove('show');
+    });
+  }
+}
+
+/**
+ * Налаштовує перемикання мобільного меню.
+ */
+function setupMobileMenu() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mainNav = document.querySelector('#main-nav');
+
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+      menuToggle.setAttribute('aria-expanded', !isExpanded);
+      mainNav.classList.toggle('active');
+    });
+  }
 }
 
 
-window.addEventListener('DOMContentLoaded', () => {
-    // Таймер
-    const display = document.querySelector('#timer');
-    if (display) {
-        startTimer(display);
-    }
+// === Ініціалізація всіх скриптів після завантаження DOM ===
+document.addEventListener('DOMContentLoaded', () => {
+  const timerDisplay = document.querySelector('#timer');
+  if (timerDisplay) {
+    startTimer(timerDisplay);
+  }
 
-    // Плавное появление элементов при скролле - с fallback'ом
-    let observer = null;
-    if ('IntersectionObserver' in window) {
-        observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-    }
-
-    // Подключаем все нужные элементы (если observer нет — делаем их видимыми сразу)
-    document.querySelectorAll('.card, .faq-item, .review').forEach(el => {
-        if (observer) observer.observe(el);
-        else el.classList.add('visible');
-    });
-
-    // Обновление итоговой суммы
-    const quantityInput = document.querySelector('#quantity');
-    const totalPriceEl = document.querySelector('#total');
-    const pricePerItem = 1499;
-
-    if (quantityInput && totalPriceEl) {
-        quantityInput.addEventListener('input', () => {
-            let qty = parseInt(quantityInput.value);
-            if (isNaN(qty) || qty < 1) qty = 1;
-            if (qty > 10) qty = 10;
-            quantityInput.value = qty;
-            totalPriceEl.textContent = qty * pricePerItem;
-        });
-    }
-
-
-    // Показываем popup покупок
-    function showPopup(text) {
-        const popup = document.querySelector('#purchases-popup');
-        if (popup) {
-            popup.textContent = text;
-            popup.classList.add('show');
-            setTimeout(() => { popup.classList.remove('show'); }, 3000);
-        }
-    }
-
-    if (document.querySelector('#purchases-popup')) {
-        setInterval(() => {
-            let bought = Math.floor(Math.random() * 3) + 1;
-            showPopup(`Тільки що купили ${bought} шт!`);
-        }, 15000);
-    }
-
-
-    // Плавное переключение вкладок (с учётом фиксированного хедера)
-    const header = document.querySelector('.site-header');
-    const headerOffset = header ? header.offsetHeight : 0;
-
-
-    document.querySelectorAll('.tab-link').forEach(tab => {
-        tab.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            // убираем и добавляем active у ссылок
-            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
-            this.classList.add('active');
-
-            // плавный скролл к нужной секции
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const elementPosition = target.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = elementPosition - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-
-    // Плавное открытие FAQ вопросов (с проверками наличия h3 и p)
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-        const q = item.querySelector('h3');
-        const a = item.querySelector('p');
-        if (!q || !a) return; // если структура не та — пропускаем
-
-        a.style.maxHeight = '0';
-        a.style.overflow = 'hidden';
-        a.style.transition = 'max-height 0.45s ease, opacity 0.35s ease';
-        a.style.opacity = 0;
-
-        q.addEventListener('click', () => {
-            if (a.style.maxHeight === '0px' || a.style.maxHeight === '0') {
-                a.style.maxHeight = a.scrollHeight + 'px';
-                a.style.opacity = 1;
-            } else {
-                a.style.maxHeight = '0';
-                a.style.opacity = 0;
-            }
-        });
-    });
-
-    // Form submit - красивое подтверждение через модалку (без ошибок, если поля отсутствуют)
-    const orderForm = document.querySelector('#order-form');
-    const modal = document.querySelector('#order-success');
-    const modalText = document.querySelector('#order-success-text');
-    const modalClose = document.querySelector('#order-success-close');
-
-    if (orderForm && modal && modalText && modalClose) {
-        orderForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const nameEl = document.querySelector('#name');
-            const phoneEl = document.querySelector('#phone');
-            const qtyEl = quantityInput || document.querySelector('#quantity');
-            const totalEl = totalPriceEl || document.querySelector('#total');
-
-            const name = nameEl ? nameEl.value.trim() : '';
-            const phone = phoneEl ? phoneEl.value.trim() : '';
-            const qty = qtyEl ? qtyEl.value : '1';
-            const total = totalEl ? totalEl.textContent : String((parseInt(qty) || 1) * pricePerItem);
-
-            modalText.textContent = `Дякуємо, ${name || 'клієнт'}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`;
-            modal.classList.add('show');
-
-            orderForm.reset();
-            if (qtyEl) qtyEl.value = 1;
-            if (totalEl) totalEl.textContent = pricePerItem;
-        });
-
-        modalClose.addEventListener('click', () => {
-            modal.classList.remove('show');
-        });
-    }
+  setupScrollAnimations();
+  setupOrderPriceUpdate();
+  setupPurchasesPopup();
+  setupSmoothScroll();
+  setupFaqAccordions();
+  setupOrderForm();
+  setupMobileMenu();
 });
