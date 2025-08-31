@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Міні-лампа G3 з бездротовою зарядкою | Стильне та комфортне освітлення</title>
     <meta name="description" content="Стильна міні-лампа G3 з бездротовою зарядкою Qi та 3 режимами світла. Швидка доставка по Україні. Ідеальне рішення для вашого робочого столу.">
-     <link rel="icon" type="image/svg+xml" href="img/favicon.jpg">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.jpg">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -39,7 +39,7 @@
     </header>
 
     <main>
-        <section id="hero" class="hero tab-content" role="banner">
+        <section id="hero" class="hero tab-content">
             <div class="container hero-grid">
                 <div class="hero-content">
                     <h1 class="hero-title">Стиль, комфорт і бездротова зарядка. Все, що потрібно для вашого робочого столу.</h1>
@@ -49,6 +49,12 @@
                         <li>Ідеальне освітлення для будь-якого моменту: яскраве — для читання, м'яке — для релаксу.</li>
                         <li>Економія, яка помітна. LED-технології споживають мінімум енергії і служать роками.</li>
                     </ul>
+
+                    <p class="price">
+                        <span class="old-price">1899 ₴</span>
+                        <span class="current-price">1499 ₴</span>
+                    </p>
+
                     <div class="hero-cta">
                         <div class="offer">🔥 Знижка 20% — до кінця дня! Час: <span id="timer">00:00:00</span></div>
                         <a class="btn" href="#order">Купити зараз</a>
@@ -167,22 +173,28 @@
 
         <section id="order" class="order tab-content">
             <div class="container">
-                <h2>Оформити замовлення</h2>
-                <form id="order-form">
-                    <label for="name">Ім'я</label>
-                    <input id="name" name="name" type="text" required autocomplete="name">
+                <h2>Замовлення</h2>
+                <p class="order-cta">Заповніть форму, і наш менеджер зв'яжеться з вами протягом 15 хвилин для підтвердження деталей замовлення.</p>
 
-                    <label for="phone">Телефон</label>
-                    <input id="phone" name="phone" type="tel" required autocomplete="tel">
+                <div class="order-form-container">
+                    <form id="order-form">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Ваше ім'я" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" placeholder="Ваш телефон" required>
+                        </div>
+                        <div class="form-group quantity-control">
+                            <label for="quantity">Кількість:</label>
+                            <input type="number" id="quantity" value="1" min="1" max="10">
+                        </div>
 
-                    <label for="quantity">Кількість</label>
-                    <input id="quantity" name="quantity" type="number" value="1" min="1" max="10">
+                        <p class="total-price">Загальна сума: <strong id="total">1499</strong> ₴</p>
 
-                    <p class="total-price">Загальна сума: <strong id="total">1499</strong> ₴</p>
-
-                    <button class="btn" type="submit">Замовити зараз</button>
-                </form>
-                <p class="guarantee">Гарантія 30 днів • Доставка 1–5 днів • Оплата: при отриманні або онлайн</p>
+                        <button class="btn" type="submit">Замовити зараз</button>
+                    </form>
+                    <p class="guarantee">Гарантія 30 днів • Доставка 1–5 днів • Оплата: при отриманні або онлайн</p>
+                </div>
             </div>
         </section>
 
