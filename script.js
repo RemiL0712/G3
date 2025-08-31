@@ -113,32 +113,29 @@ function setupSmoothScroll() {
   });
 }
 
-/**
- * Реалізує логіку розкриття-згортання FAQ-питань.
- */
-function setupFaqAccordions() {
-  const faqQuestions = document.querySelectorAll('.faq-question');
-  faqQuestions.forEach(question => {
+// Логіка для розкривних FAQ
+const faqQuestions = document.querySelectorAll('.faq-question');
+
+faqQuestions.forEach(question => {
+  question.addEventListener('click', () => {
     const answer = question.nextElementSibling;
-    if (!answer) return;
 
-    question.addEventListener('click', () => {
-      const isActive = question.classList.contains('active');
+    // Перевіряємо, чи активне вже питання
+    const isActive = question.classList.contains('active');
 
-      // Закриття всіх відкритих питань
-      faqQuestions.forEach(q => {
-        q.classList.remove('active');
-        q.nextElementSibling.style.display = 'none';
-      });
-
-      // Якщо поточне питання не було активним, відкриваємо його
-      if (!isActive) {
-        question.classList.add('active');
-        answer.style.display = 'block';
-      }
+    // Закриваємо всі питання та повертаємо стрілочки вниз
+    faqQuestions.forEach(q => {
+      q.classList.remove('active');
+      q.nextElementSibling.style.display = 'none';
     });
+
+    // Якщо питання не було активним, відкриваємо його та повертаємо стрілочку вгору
+    if (!isActive) {
+      question.classList.add('active');
+      answer.style.display = 'block';
+    }
   });
-}
+});
 
 /**
  * Обробляє відправку форми та відображає модальне вікно підтвердження.

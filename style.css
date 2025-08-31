@@ -357,6 +357,7 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Нові стилі для стрілочки в FAQ */
 .faq-question {
   cursor: pointer;
   position: relative;
@@ -364,29 +365,34 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 600;
+  /* Додамо трохи більше простору навколо питання */
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .faq-question::after {
-  content: '▼';
-  font-size: 1.2rem;
+  content: '⌄'; /* Більш м'яка стрілочка вниз */
+  font-size: 1.5rem; /* Збільшимо розмір для помітності */
   font-weight: bold;
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
+  transform: translateY(-50%) rotate(0deg); /* Початкове положення - дивиться вниз */
   transition: transform 0.3s ease;
+  color: #333; /* Можна змінити колір, якщо потрібно */
 }
 
 .faq-question.active::after {
-  transform: translateY(-50%) rotate(0deg);
+  transform: translateY(-50%) rotate(180deg); /* При активному стані - дивиться вгору (180 градусів) */
 }
 
+/* Ховаємо відповіді, поки вони не активні */
 .faq-answer {
   display: none;
   margin-top: 10px;
-  color: #374151;
+  padding-left: 10px; /* Невеликий відступ для тексту відповіді */
+  padding-bottom: 10px; /* Трохи відступу знизу */
+  border-left: 2px solid #eee; /* Можна додати тонку лінію зліва для візуального відділення */
 }
 
 /* === Підвал сайту (Footer) === */
