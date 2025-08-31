@@ -32,52 +32,57 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Налаштовує карусель із кнопками навігації та автопрокруткою.
    */
-  function setupCarousel() {
-    const slides = document.querySelectorAll('.carousel-slide');
-    const nextButton = document.querySelector('.carousel-button.next');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    let currentSlideIndex = 0;
-    let autoScrollInterval;
+  /**
+ * Налаштовує карусель із кнопками навігації та автопрокруткою.
+ * @param {string} containerSelector - Селектор для контейнера каруселі.
+ */
+function setupCarousel(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
 
-    if (!slides.length) {
-      return;
-    }
+  const slides = container.querySelectorAll('.carousel-slide');
+  const nextButton = container.querySelector('.carousel-button.next');
+  const prevButton = container.querySelector('.carousel-button.prev');
+  let currentSlideIndex = 0;
+  let autoScrollInterval;
 
-    const showSlide = (index) => {
-      slides.forEach(slide => slide.classList.remove('active'));
-      slides[index].classList.add('active');
-    };
+  if (!slides.length || !nextButton || !prevButton) {
+    return;
+  }
 
-    const nextSlide = () => {
-      currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-      showSlide(currentSlideIndex);
-    };
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
 
-    const startAutoScroll = () => {
-      stopAutoScroll();
-      autoScrollInterval = setInterval(nextSlide, 5000);
-    };
+  function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+    showSlide(currentSlideIndex);
+  }
 
-    const stopAutoScroll = () => {
-      clearInterval(autoScrollInterval);
-    };
+  function startAutoScroll() {
+    stopAutoScroll();
+    autoScrollInterval = setInterval(nextSlide, 5000);
+  }
 
-    if (nextButton && prevButton) {
-      nextButton.addEventListener('click', () => {
-        nextSlide();
-        startAutoScroll();
-      });
+  function stopAutoScroll() {
+    clearInterval(autoScrollInterval);
+  }
 
-      prevButton.addEventListener('click', () => {
-        currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-        showSlide(currentSlideIndex);
-        startAutoScroll();
-      });
-    }
+  nextButton.addEventListener('click', () => {
+    nextSlide();
+    startAutoScroll();
+  });
 
+  prevButton.addEventListener('click', () => {
+    currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
     showSlide(currentSlideIndex);
     startAutoScroll();
-  }
+  });
+
+  showSlide(currentSlideIndex);
+  startAutoScroll();
+}
 
   /**
    * Обробляє плавний скролінг до секцій та оновлює активний пункт меню.
@@ -233,8 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (timerDisplay) {
     startTimer(timerDisplay);
   }
-
-  setupCarousel();
+  
+  setupCarousel('.hero-media'); // Для каруселі фотографій
+  setupCarousel('.review-carousel'); // Для нової каруселі відгуків
   setupSmoothScroll();
   setupOrderPriceUpdate();
   setupMobileMenu();
