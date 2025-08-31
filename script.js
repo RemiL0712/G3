@@ -233,12 +233,31 @@ function setupCarousel(containerSelector) {
     }
   }
 
+  /**
+   * 
+ * Показує/ховає кнопку "Нагору" в залежності від скролінгу.
+ */
+function setupBackToTopButton() {
+  const backToTopButton = document.querySelector('#back-to-top');
+  if (!backToTopButton) return;
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) { // Показуємо кнопку, якщо прокручено більше 300px
+      backToTopButton.classList.add('show');
+    } else {
+      backToTopButton.classList.remove('show');
+    }
+  });
+}
+
+
   // === Ініціалізація всіх скриптів ===
   const timerDisplay = document.querySelector('#timer');
   if (timerDisplay) {
     startTimer(timerDisplay);
   }
   
+  setupBackToTopButton();
   setupCarousel('.hero-media'); // Для каруселі фотографій
   setupCarousel('.review-carousel'); // Для нової каруселі відгуків
   setupSmoothScroll();

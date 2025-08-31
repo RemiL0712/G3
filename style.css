@@ -547,17 +547,104 @@ body {
     to { opacity: 1; }
 }
 
+/* === Кнопка "Нагору" === */
+.back-to-top {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 99;
+  color: #fff;
+  background-color: #2ecc71;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  /* ===== Властивості для плавного переходу ===== */
+  opacity: 0; /* Спочатку робимо її повністю прозорою */
+  visibility: hidden; /* Приховуємо, щоб не можна було клікнути */
+  transform: translateY(20px); /* Трохи опускаємо її, щоб створити ефект "виїзду" */
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.back-to-top svg {
+  width: 24px;
+  height: 24px;
+  stroke: #fff;
+}
+
+.back-to-top.show {
+  opacity: 1; /* Робимо видимою */
+  visibility: visible; /* Робимо клікабельною */
+  transform: translateY(0); /* Повертаємо на місце */
+}
+
 /*==================================================
   Футер
   ==================================================*/
-
+  
 .site-footer {
-  background-color: #1abc9c;
+  background-color: #333;
+  color: #f0f2f5;
+  padding: 50px 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Змінено з 3 на 2 стовпці */
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #2ecc71;
+  text-decoration: none;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.footer-tagline,
+.footer-text {
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.footer-links h3 {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
   color: #fff;
-  padding: 20px 0;
-  text-align: center;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  font-weight: 600;
+}
+
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links ul li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #2ecc71;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
 }
 
 
