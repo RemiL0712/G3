@@ -43,18 +43,660 @@ body {
   color: #fff;
   border-radius: 12px;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: bold;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
   font-size: 1.1rem;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  cursor: pointer;
 }
 
 .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Клас для візуального приховування елементів (для доступності) */
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Стилі для секцій */
+section {
+  padding: 80px 0;
+}
+
+section:nth-of-type(odd) {
+  background-color: #f0f2f5;
+}
+
+section h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+/*==================================================
+  Хедер та навігація
+  ==================================================*/
+
+.site-header {
+  background-color: var(--card-bg-color);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 5px 0;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.nav-link.active {
+  color: var(--primary-color);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  z-index: 1001;
+}
+
+.menu-toggle .icon {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-color);
+  margin: 5px 0;
+  transition: transform 0.3s ease;
+}
+
+/*==================================================
+  Секція Hero
+  ==================================================*/
+
+.hero {
+  padding: 100px 0;
+  background-color: var(--card-bg-color);
+}
+
+.hero-grid {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.hero-benefits {
+  list-style-type: none;
+  margin-bottom: 30px;
+}
+
+.hero-benefits li {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-benefits li::before {
+  content: '✅';
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #aaa;
+  font-size: 1.5rem;
+  margin-right: 10px;
+}
+
+.current-price {
+  color: var(--primary-color);
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.offer {
+  font-weight: bold;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+}
+
+.offer #timer {
+  font-family: monospace;
+}
+
+.hero-media {
+  flex: 1;
+  text-align: center;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  flex-wrap: nowrap;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  height: auto;
+  display: none;
+  border-radius: 16px;
+}
+
+.carousel-slide.active {
+  display: block;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}
+
+.carousel-button:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+/*==================================================
+  Секція Features
+  ==================================================*/
+
+.features .lead {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.card {
+  background-color: var(--card-bg-color);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  flex: 1 1 300px; /* Виправлення тут: забезпечує гнучкість і мінімальну ширину */
+  max-width: 350px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card .icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card p {
+  color: #666;
+}
+
+/*==================================================
+  Секція Reviews
+  ==================================================*/
+
+.reviews .lead {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.review-carousel {
+  max-width: 800px;
+  padding: 0 50px; /* Додав відступи для кнопок */
+}
+
+.review-cards {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.review-card {
+  min-width: 100%;
+  scroll-snap-align: center;
+  padding: 30px;
+  background-color: var(--card-bg-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  display: none; /* Hide all slides by default */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+}
+
+.review-card.active {
+  display: block; /* Show only the active slide */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.review-stars {
+  color: gold;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.review-text {
+  font-style: italic;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.review-author {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/*==================================================
+  Секція Order (Замовлення)
+  ==================================================*/
+
+.order .order-cta {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.order-form-container {
+  background-color: var(--card-bg-color);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.quantity-control {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-control input {
+  width: 80px;
+  text-align: center;
+  margin-left: 10px;
+}
+
+.total-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-top: 20px;
+}
+
+.guarantee {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 20px;
+}
+
+/*==================================================
+  Секція FAQ (Часті питання)
+  ==================================================*/
+
+.faq-item {
+  background-color: var(--card-bg-color);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.faq-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.faq-question::after {
+  content: '+';
+  font-size: 1.5rem;
+  font-weight: normal;
+  transition: transform 0.3s ease;
+}
+
+.faq-question.active::after {
+  content: '−';
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  display: none;
+  padding-top: 15px;
+  font-size: 1rem;
+  color: #555;
+}
+
+/*==================================================
+  Футер
+  ==================================================*/
+
+.site-footer {
+  background-color: #333;
+  color: var(--light-text-color);
+  padding: 50px 0;
+}
+
+.footer-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.footer-info {
+  flex: 2;
+}
+
+.footer-tagline {
+  font-size: 1.1rem;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.footer-links {
+  flex: 1;
+}
+
+.footer-links h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.footer-links ul {
+  list-style: none;
+}
+
+.footer-links li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1rem;
+}
+
+.footer-links li a:hover {
+  color: var(--primary-color);
+}
+
+/*==================================================
+  Кнопка "Нагору"
+  ==================================================*/
+
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--primary-color);
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/*==================================================
+  Модальне вікно
+  ==================================================*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s;
+  z-index: 2000;
+}
+
+.modal.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  animation: fadeIn 0.5s;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.modal p {
+  font-size: 1.2rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -63,642 +705,27 @@ body {
   padding: 0;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
   border: 0;
 }
 
-
 /*==================================================
-  Шапка та Навігація
+  Анімації
   ==================================================*/
 
-/* Стилі для шапки сайту */
-.site-header {
-  background-color: var(--card-bg-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
-}
-
-/* Стилі для логотипу */
-.logo {
-  font-weight: 700;
-  color: var(--primary-color);
-  font-size: 1.2rem;
-  text-decoration: none;
-}
-
-/* Стилі для навігаційного меню */
-.nav {
-  display: flex;
-  gap: 12px;
-}
-
-.nav-link {
-  color: #333;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background 0.25s, color 0.25s;
-}
-
-.nav-link:hover {
-  background: rgba(46, 204, 113, 0.08);
-}
-
-.nav-link.active {
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  box-shadow: 0 6px 18px rgba(46, 204, 113, 0.15);
-}
-
-/* Кнопка-перемикач для мобільного меню */
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  z-index: 60;
-}
-
-.menu-toggle .icon {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: #333;
-  margin: 5px 0;
-  transition: all 0.3s ease;
-}
-
-
-/*==================================================
-  Секція-герой
-  ==================================================*/
-
-.hero {
-  padding: 48px 0;
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-  color: white;
-}
-
-.hero-grid {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.hero-content {
-  flex: 1;
-  min-width: 280px;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 20px;
-  border-radius: 12px;
-}
-
-.hero-title {
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 14px;
-  letter-spacing: -0.5px;
-}
-
-.hero-subtitle {
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 18px;
-  opacity: 0.9;
-  max-width: 600px;
-}
-
-.hero-benefits {
-  margin: 10px 0 18px 20px;
-}
-
-.hero-benefits li {
-  margin-bottom: 8px;
-}
-
-/* Стилі для ціни */
-.price {
-  font-size: 2.2rem;
-  font-weight: bold;
-  margin: 15px 0;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.old-price {
-  font-size: 1.4rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: line-through;
-  font-weight: normal;
-}
-
-.current-price {
-  color: #e74c3c;
-}
-
-.hero-cta {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.offer {
-  font-weight: 700;
-  color: #fffde7;
-}
-
-.hero-media {
-  flex: 1;
-  text-align: center;
-  min-width: 280px;
-  position: relative;
-}
-
-
-/*==================================================
-  Стилі каруселі
-  ==================================================*/
-
-.carousel-container {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
-  height: 520px;
-}
-
-.carousel-track {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.carousel-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  object-fit: contain;
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.carousel-slide.active {
-  opacity: 1;
-}
-
-.carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.4);
-  border: none;
-  color: #333;
-  font-size: 2rem;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 10px 15px;
-  border-radius: 50%;
-  transition: background-color 0.3s;
-  z-index: 10;
-}
-
-.carousel-button:hover {
-  background-color: rgba(255, 255, 255, 0.7);
-}
-
-.prev {
-  left: 10px;
-}
-
-.next {
-  right: 10px;
-}
-
-
-/*==================================================
-  Секція переваг
-  ==================================================*/
-
-.features {
-  padding: 56px 0;
-  background-color: var(--card-bg-color);
-}
-
-.features h2 {
-  text-align: center;
-  margin-bottom: 12px;
-  color: var(--secondary-color);
-}
-
-.features .lead {
-  text-align: center;
-  color: #4b5563;
-  margin-bottom: 26px;
-}
-
-.cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.card {
-  background-color: var(--card-bg-color);
-  border-radius: 14px;
-  padding: 20px;
-  width: 300px;
-  box-shadow: 0 6px 24px rgba(13, 38, 25, 0.04);
-  transition: transform 0.28s ease, box-shadow 0.28s ease;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 14px 40px rgba(13, 38, 25, 0.08);
-}
-
-.card .icon {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-}
-
-
-/*==================================================
-  Секція відгуків
-  ==================================================*/
-  
-.reviews {
-  padding: 40px 0;
-  background-color: #f0f2f5;
-}
-
-.reviews h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #333;
-}
-
-.review-carousel {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
+.card,
+.faq-item,
 .review-card {
-  background: var(--card-bg-color);
-  border-radius: 16px;
-  padding: 20px 25px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  text-align: center;
-  flex-shrink: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 180px;
-}
-
-.review-stars {
-  color: #ffc107;
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-}
-
-.review-text {
-  font-style: italic;
-  font-size: 1rem;
-  margin: 10px 0;
-  color: #555;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.review-author {
-  font-weight: bold;
-  color: #333;
-  margin-top: 5px;
-}
-
-/* Оновлення стилю для треку каруселі */
-.carousel-track {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 100%;
-  min-height: 220px;
-}
-
-
-/*==================================================
-  Секція форми замовлення
-  ==================================================*/
-
-.order {
-  padding: 60px 0;
-  background: linear-gradient(145deg, #f0f2f5, #e0e4e9);
-}
-
-.order h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.order-cta {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 30px;
-}
-
-.order-form-container {
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 30px;
-  background-color: var(--card-bg-color);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.order-form-container input {
-  width: 100%;
-  padding: 12px 18px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.order-form-container input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
-  outline: none;
-}
-
-.quantity-control {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.quantity-control input {
-  width: 80px;
-  text-align: center;
-}
-
-.total-price {
-  text-align: right;
-  font-size: 1.25rem;
-  color: #333;
-  margin-bottom: 25px;
-}
-
-.guarantee {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #777;
-  margin-top: 20px;
-}
-
-
-/*==================================================
-  Секція Частих питань (Акордеон)
-  ==================================================*/
-
-.faq {
-  padding: 56px 0;
-  background-color: var(--bg-color);
-}
-
-.faq h2 {
-  text-align: center;
-  margin-bottom: 18px;
-  color: var(--secondary-color);
-}
-
-.faq-item {
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-}
-
-.faq-question {
-    cursor: pointer;
-    position: relative;
-    padding: 15px 25px 15px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    transition: color 0.3s;
-}
-
-.faq-question:hover {
-    color: var(--primary-color);
-}
-
-.faq-question::after {
-    content: '⌄';
-    font-size: 1.5rem;
-    font-weight: bold;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%) rotate(0deg);
-    transition: transform 0.3s ease;
-    color: #555;
-}
-
-.faq-question.active::after {
-    transform: translateY(-50%) rotate(180deg);
-    color: var(--primary-color);
-}
-
-.faq-answer {
-    display: none;
-    padding-right: 25px;
-    color: #666;
-    line-height: 1.8;
-}
-
-.faq-question.active + .faq-answer {
-    display: block;
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* === Кнопка "Нагору" === */
-.back-to-top {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 99;
-  color: #fff;
-  background-color: var(--primary-color);
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  /* ===== Властивості для плавного переходу ===== */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(30px);
 }
 
-.back-to-top svg {
-  width: 24px;
-  height: 24px;
-  stroke: #fff;
-}
-
-.back-to-top.show {
+.card.visible,
+.faq-item.visible,
+.review-card.visible {
   opacity: 1;
-  visibility: visible;
   transform: translateY(0);
-}
-
-/*==================================================
-  Футер
-  ==================================================*/
-  
-.site-footer {
-  background-color: #333;
-  color: var(--light-text-color);
-  padding: 50px 0;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 40px;
-  align-items: flex-start;
-}
-
-.footer-logo {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: var(--primary-color);
-  text-decoration: none;
-  margin-bottom: 10px;
-  display: inline-block;
-}
-
-.footer-tagline,
-.footer-text {
-  font-size: 0.9rem;
-  color: #aaa;
-  line-height: 1.5;
-}
-
-.footer-links h3 {
-  font-size: 1.1rem;
-  margin-bottom: 20px;
-  color: #fff;
-  font-weight: 600;
-}
-
-.footer-links ul {
-  list-style: none;
-}
-
-.footer-links ul li {
-  margin-bottom: 10px;
-}
-
-.footer-links a {
-  color: #aaa;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--primary-color);
-}
-
-@media (max-width: 768px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-}
-
-
-/*==================================================
-  Модальні вікна та анімації
-  ==================================================*/
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.modal.show {
-  display: flex;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.modal-content {
-  background: var(--card-bg-color);
-  padding: 20px 30px;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.4s ease;
-}
-
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  border: none;
-  background: none;
 }
 
 /* Keyframe анімації */
@@ -758,39 +785,66 @@ body {
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.4s ease, opacity 0.4s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
-  /* Активне мобільне меню */
+  /* Показати навігацію, коли меню активне */
   .nav.active {
     transform: translateY(0);
     opacity: 1;
-    pointer-events: all;
+    pointer-events: auto;
   }
 
   .nav-link {
-    text-align: center;
-    width: 100%;
-    padding: 16px 0;
+    padding: 10px 0;
+  }
+
+  .hero-grid {
+    gap: 30px;
   }
 
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .footer-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: 2rem;
   }
 
   .hero-subtitle {
     font-size: 1rem;
   }
 
-  h2 {
+  .price {
     font-size: 1.8rem;
   }
-}
 
-@media (max-width: 600px) {
-  .btn,
-  .order input {
-    width: 100%;
-    padding: 16px;
+  section h2 {
+    font-size: 2rem;
+  }
+
+  .modal-content {
+    padding: 20px;
+  }
+
+  .faq-question {
+    font-size: 1rem;
   }
 }

@@ -1,12 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Константа для ціни товару
   const PRICE_PER_ITEM = 1499;
 
-  /**
-   * Запускає таймер зворотного відліку до кінця дня.
-   * @param {HTMLElement} display - Елемент для відображення таймера.
-   */
   function startTimer(display) {
     function updateTimer() {
       const now = new Date();
@@ -29,10 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateTimer, 1000);
   }
 
-  /**
-   * Налаштовує карусель із кнопками навігації та автопрокруткою.
-   * @param {string} containerSelector - Селектор для контейнера каруселі.
-   */
   function setupCarousel(containerSelector) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
@@ -47,50 +38,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Показує слайд за індексом, приховуючи інші
     function showSlide(index) {
       slides.forEach(slide => slide.classList.remove('active'));
       slides[index].classList.add('active');
     }
 
-    // Переходить до наступного слайда
     function nextSlide() {
       currentSlideIndex = (currentSlideIndex + 1) % slides.length;
       showSlide(currentSlideIndex);
     }
 
-    // Запускає автопрокрутку
     function startAutoScroll() {
       stopAutoScroll();
       autoScrollInterval = setInterval(nextSlide, 5000);
     }
 
-    // Зупиняє автопрокрутку
     function stopAutoScroll() {
       clearInterval(autoScrollInterval);
     }
 
-    // Обробник для кнопки "Вперед"
     nextButton.addEventListener('click', () => {
       nextSlide();
-      startAutoScroll(); // Перезапускає таймер автопрокрутки після кліку
+      startAutoScroll();
     });
 
-    // Обробник для кнопки "Назад"
     prevButton.addEventListener('click', () => {
       currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
       showSlide(currentSlideIndex);
-      startAutoScroll(); // Перезапускає таймер автопрокрутки після кліку
+      startAutoScroll();
     });
 
-    // Ініціалізація
     showSlide(currentSlideIndex);
     startAutoScroll();
   }
 
-  /**
-   * Обробляє плавний скролінг до секцій та оновлює активний пункт меню.
-   */
   function setupSmoothScroll() {
     const headerOffset = document.querySelector('.site-header')?.offsetHeight || 0;
     const navLinks = document.querySelectorAll('.tab-link');
@@ -99,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
-        // Оновлює активний клас для навігаційних посилань
         navLinks.forEach(item => item.classList.remove('active'));
         this.classList.add('active');
 
@@ -116,26 +96,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /**
-   * Оновлює загальну ціну у формі замовлення на основі кількості.
-   */
   function setupOrderPriceUpdate() {
     const quantityInput = document.querySelector('#quantity');
     const totalPriceEl = document.querySelector('#total');
 
     if (quantityInput && totalPriceEl) {
-      quantityInput.addEventListener('input', () => {
+      function updatePrice() {
         let qty = parseInt(quantityInput.value) || 1;
-        qty = Math.max(1, Math.min(10, qty)); // Обмежує кількість від 1 до 10
+        qty = Math.max(1, Math.min(10, qty));
         quantityInput.value = qty;
         totalPriceEl.textContent = qty * PRICE_PER_ITEM;
-      });
+      }
+      
+      quantityInput.addEventListener('input', updatePrice);
+      updatePrice(); // Call on page load to set initial total
     }
   }
 
-  /**
-   * Налаштовує функціональність перемикача мобільного меню.
-   */
   function setupMobileMenu() {
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('#main-nav');
@@ -149,16 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Обробляє відправку форми та відображає модальне вікно підтвердження.
-   */
   function setupOrderForm() {
     const orderForm = document.querySelector('#order-form');
     const modal = document.querySelector('#order-success');
     const modalText = document.querySelector('#order-success-text');
     const modalClose = document.querySelector('#order-success-close');
 
-    // Отримання посилань на елементи форми один раз
     const nameInput = document.querySelector('#name');
     const phoneInput = document.querySelector('#phone');
     const quantityInput = document.querySelector('#quantity');
@@ -177,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.add('show');
 
         orderForm.reset();
-        // Скидаємо значення кількості та загальної суми до початкових
         if (quantityInput) quantityInput.value = 1;
         if (totalElement) totalElement.textContent = PRICE_PER_ITEM;
       });
@@ -188,9 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /**
-   * Налаштовує поведінку акордеона для секції FAQ.
-   */
   function setupFaqAccordions() {
     const faqItems = document.querySelectorAll('.faq-item');
     if (!faqItems.length) return;
@@ -203,28 +172,23 @@ document.addEventListener('DOMContentLoaded', () => {
       question.addEventListener('click', () => {
         const isActive = question.classList.contains('active');
 
-        // Закриваємо всі інші відкриті відповіді
         faqItems.forEach(i => {
           const q = i.querySelector('.faq-question');
           const a = i.querySelector('.faq-answer');
-          if (q && a) {
-            if (q !== question) { // Перевірка, щоб не закрити поточний елемент
-              q.classList.remove('active');
-              a.style.display = 'none';
-            }
+          if (q && a && q.classList.contains('active')) {
+            q.classList.remove('active');
+            a.style.display = 'none';
           }
         });
 
-        // Відкриваємо/закриваємо поточну відповідь
-        question.classList.toggle('active');
-        answer.style.display = isActive ? 'none' : 'block';
+        if (!isActive) {
+          question.classList.add('active');
+          answer.style.display = 'block';
+        }
       });
     });
   }
 
-  /**
-   * Ініціалізує анімації на основі скролінгу.
-   */
   function setupScrollAnimations() {
     const elementsToAnimate = document.querySelectorAll('.card, .faq-item, .review-card');
     if (!elementsToAnimate.length) return;
@@ -243,14 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       elementsToAnimate.forEach(el => observer.observe(el));
     } else {
-      // Запасний варіант для старих браузерів
       elementsToAnimate.forEach(el => el.classList.add('visible'));
     }
   }
 
-  /**
-   * Показує/ховає кнопку "Нагору" в залежності від скролінгу.
-   */
   function setupBackToTopButton() {
     const backToTopButton = document.querySelector('#back-to-top');
     if (!backToTopButton) return;
@@ -265,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // === Ініціалізація всіх скриптів ===
   const timerDisplay = document.querySelector('#timer');
   if (timerDisplay) {
     startTimer(timerDisplay);
