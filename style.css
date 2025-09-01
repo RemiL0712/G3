@@ -480,22 +480,33 @@ section h2::after {
   gap: 20px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
+/* Стилі для плаваючих лейблів та іконок */
+.form-group.floating-label-group {
+    position: relative;
+    display: flex;
+    align-items: center; /* Центруємо іконку по вертикалі */
+}
+
+.form-group .icon {
+    position: absolute;
+    left: 15px; /* Відступ іконки від краю */
+    color: #aaa;
+    font-size: 1rem;
+    pointer-events: none; /* Щоб іконка не перешкоджала кліку на поле */
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 12px;
+  padding: 12px 12px 12px 45px; /* Збільшуємо лівий відступ для іконки */
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
   background-color: #fff;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+  -webkit-appearance: none; /* Прибираємо стандартні стрілки для select в WebKit */
+  -moz-appearance: none;    /* Прибираємо стандартні стрілки для select в Firefox */
+  appearance: none;         /* Прибираємо стандартні стрілки для select */
 }
 
 .form-group input:focus,
@@ -505,10 +516,52 @@ section h2::after {
   box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
 }
 
+.form-group label {
+    position: absolute;
+    left: 45px; /* Зсуваємо лейбл, щоб він не накладається на іконку */
+    top: 13px;
+    color: #888;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+    background-color: transparent; /* Переконайтеся, що фон прозорий */
+    padding: 0 5px; /* Невеликий відступ, щоб текст лейбла не торкався полів */
+}
+
+/* Стилі для плаваючого лейбла при фокусі або заповненні */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group select:focus + label,
+.form-group select:valid + label { /* :valid для select, бо placeholder-shown не працює */
+    top: -10px;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    background-color: var(--card-bg-color); /* Фон лейбла, щоб він "плавав" над полем */
+    left: 40px; /* Трохи зміщуємо лейбл вгору */
+}
+
+/* Додаткові стилі для select, щоб стрілка була справа */
+.form-group.floating-label-group select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007BB5%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20202.7%2018.8%2074.5a17.6%2017.6%200%200%200-25.3%200%2017.6%2017.6%200%200%200%200%2025.3l130.4%20129.5a17.6%2017.6%200%200%200%2025.3%200l130.4-129.5a17.6%2017.6%200%200%200%200-25.3c-6.7-6.7-17.7-6.7-24.4%200z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 15px center; /* Розташування стрілки */
+    background-size: 12px; /* Розмір стрілки */
+}
+
+
+.payment-options-group .form-label {
+    align-self: flex-start; /* Вирівнюємо "Спосіб оплати" зліва */
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
 .payment-options {
   display: flex;
   gap: 20px;
   font-size: 0.9rem;
+  width: 100%; /* Займає всю ширину */
+  justify-content: center; /* Центруємо варіанти оплати */
 }
 
 .payment-options label {
@@ -522,6 +575,7 @@ section h2::after {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  padding-top: 10px; /* Трохи відступу зверху */
 }
 
 .quantity-input-wrapper {
@@ -531,6 +585,7 @@ section h2::after {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 5px;
+  background-color: #fff;
 }
 
 .quantity-btn {
@@ -542,6 +597,8 @@ section h2::after {
   font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
+  color: #555;
+  font-weight: bold;
 }
 
 .quantity-btn:hover {
@@ -558,14 +615,21 @@ section h2::after {
   padding: 0 10px;
   min-width: 25px;
   text-align: center;
+  color: #333;
 }
 
 .total-price {
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Збільшуємо розмір */
   font-weight: bold;
   color: var(--primary-color);
-  margin-top: 20px;
+  margin-top: 25px;
   text-align: center;
+  padding: 10px 0;
+  border-top: 1px dashed #eee; /* Роздільник */
+}
+
+.total-price strong {
+    color: var(--accent-color); /* Акцентний колір для суми */
 }
 
 .guarantee {
@@ -579,12 +643,13 @@ section h2::after {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .trust-badges img {
-  height: 30px;
-  opacity: 0.7;
+  height: 35px; /* Збільшуємо розмір іконок довіри */
+  opacity: 0.8;
+  filter: grayscale(20%); /* Трохи приглушуємо, щоб не відволікали */
 }
 
 /*==================================================

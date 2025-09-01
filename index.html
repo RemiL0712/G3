@@ -7,6 +7,7 @@
     <title>Міні-лампа G3 з бездротовою зарядкою | Стильне та комфортне освітлення</title>
     <meta name="description" content="Стильна міні-лампа G3 з бездротовою зарядкою Qi та 3 режимами світла. Швидка доставка по Україні. Ідеальне рішення для вашого робочого столу.">
     <link rel="icon" type="image/svg+xml" href="img/favicon.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -197,23 +198,32 @@
 
                 <div class="order-form-container">
                     <form id="order-form">
-                        <div class="form-group">
-                            <input type="text" id="name" placeholder="Ваше ім'я та прізвище" required>
+                        <div class="form-group floating-label-group">
+                            <i class="fas fa-user icon"></i>
+                            <input type="text" id="name" placeholder=" " required>
+                            <label for="name">Ваше ім'я та прізвище</label>
                         </div>
-                        <div class="form-group">
-                            <input type="tel" id="phone" placeholder="Номер телефону" required>
+                        <div class="form-group floating-label-group">
+                            <i class="fas fa-phone icon"></i>
+                            <input type="tel" id="phone" placeholder=" " required pattern="^\+?3?8?(0\d{9})$" title="Будь ласка, введіть дійсний український номер телефону (наприклад, 0951234567 або +380951234567)">
+                            <label for="phone">Номер телефону</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group floating-label-group">
+                            <i class="fas fa-city icon"></i>
                             <select id="cities-select" required>
                                 <option value="" disabled selected>Виберіть місто</option>
                             </select>
+                            <label for="cities-select">Місто</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group floating-label-group">
+                            <i class="fas fa-map-marker-alt icon"></i>
                             <select id="warehouses-select" required>
                                 <option value="" disabled selected>Виберіть відділення</option>
                             </select>
+                            <label for="warehouses-select">Відділення Нової Пошти</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group payment-options-group">
+                            <label class="form-label">Спосіб оплати:</label>
                             <div class="payment-options">
                                 <label>
                                     <input type="radio" name="payment-method" value="on-delivery" checked>

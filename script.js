@@ -341,18 +341,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  const timerDisplay = document.querySelector('#timer');
+   const timerDisplay = document.querySelector('#timer');
   if (timerDisplay) {
     startTimer(timerDisplay);
   }
 
   setupBackToTopButton();
-  setupCarousel('.hero-media');
-  setupCarousel('.review-carousel');
   setupSmoothScroll();
   setupOrderPriceUpdate();
   setupMobileMenu();
-  setupOrderForm();
+  setupOrderForm(); // Тут ваша розширена функція
   setupFaqAccordions();
   setupScrollAnimations();
+  setupCarousel('.hero-media');
+  setupCarousel('.review-carousel');
 });
