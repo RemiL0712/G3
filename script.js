@@ -96,26 +96,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /**
+   * Оновлює загальну ціну у формі замовлення на основі кількості.
+   */
   function setupOrderPriceUpdate() {
-    const quantityInput = document.querySelector('#quantity');
+    const quantityEl = document.querySelector('#quantity');
+    const minusBtn = document.querySelector('.minus-btn');
+    const plusBtn = document.querySelector('.plus-btn');
     const totalPriceEl = document.querySelector('#total');
-
-    if (quantityInput && totalPriceEl) {
+    
+    // Перевіряємо, чи існують всі елементи перед налаштуванням
+    if (quantityEl && minusBtn && plusBtn && totalPriceEl) {
       function updatePrice() {
-        let qty = parseInt(quantityInput.value) || 1;
-        qty = Math.max(1, Math.min(10, qty));
-        quantityInput.value = qty;
+        let qty = parseInt(quantityEl.textContent) || 1;
         totalPriceEl.textContent = qty * PRICE_PER_ITEM;
       }
       
-      quantityInput.addEventListener('input', updatePrice);
-      updatePrice(); // Call on page load to set initial total
+      minusBtn.addEventListener('click', () => {
+        let qty = parseInt(quantityEl.textContent);
+        if (qty > 1) {
+          quantityEl.textContent = qty - 1;
+          updatePrice();
+        }
+      });
+      
+      plusBtn.addEventListener('click', () => {
+        let qty = parseInt(quantityEl.textContent);
+        if (qty < 10) {
+          quantityEl.textContent = qty + 1;
+          updatePrice();
+        }
+      });
+      
+      updatePrice(); // Викликаємо при завантаженні сторінки, щоб встановити початкову суму
     }
   }
 
+  /**
+   * Налаштовує функціональність перемикача мобільного меню.
+   */
   function setupMobileMenu() {
     const menuToggle = document.querySelector('.menu-toggle');
     const mainNav = document.querySelector('#main-nav');
+    const navLinks = document.querySelectorAll('.nav-link');
 
     if (menuToggle && mainNav) {
       menuToggle.addEventListener('click', () => {
@@ -123,41 +146,134 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.setAttribute('aria-expanded', !isExpanded);
         mainNav.classList.toggle('active');
       });
+
+      // Додаємо обробник подій до кожного посилання в мобільному меню
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          // Закриваємо меню після кліку на посилання
+          menuToggle.setAttribute('aria-expanded', 'false');
+          mainNav.classList.remove('active');
+        });
+      });
     }
   }
 
+ const NOVA_POSHTA_API_KEY = '373241c354ae171bbebf897b9dc07c5d'; // <--- ЗАМІНІТЬ НА ВАШ КЛЮЧ
+  const API_URL = 'https://api.novaposhta.ua/v2.0/json/';
+
+  /**
+   * Завантажує список міст з API Нової Пошти.
+   */
+  async function loadCities() {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        apiKey: NOVA_POSHTA_API_KEY,
+        modelName: 'Address',
+        calledMethod: 'getCities',
+        methodProperties: {
+          "Page": "1",
+          "Limit": "500"
+        }
+      })
+    });
+    const data = await response.json();
+    return data.data;
+  }
+
+  /**
+   * Завантажує список відділень для обраного міста.
+   * @param {string} cityRef - Ref міста.
+   */
+  async function loadWarehouses(cityRef) {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        apiKey: NOVA_POSHTA_API_KEY,
+        modelName: 'Address',
+        calledMethod: 'getWarehouses',
+        methodProperties: {
+          "CityRef": cityRef
+        }
+      })
+    });
+    const data = await response.json();
+    return data.data;
+  }
+
+  /**
+   * Обробляє відправку форми замовлення та показує модальне вікно.
+   */
   function setupOrderForm() {
-    const orderForm = document.querySelector('#order-form');
-    const modal = document.querySelector('#order-success');
-    const modalText = document.querySelector('#order-success-text');
-    const modalClose = document.querySelector('#order-success-close');
+    const form = document.getElementById('order-form');
+    const citiesSelect = document.getElementById('cities-select');
+    const warehousesSelect = document.getElementById('warehouses-select');
+    const modal = document.getElementById('order-success');
+    const modalText = document.getElementById('order-success-text');
+    const modalCloseBtn = document.getElementById('order-success-close');
 
-    const nameInput = document.querySelector('#name');
-    const phoneInput = document.querySelector('#phone');
-    const quantityInput = document.querySelector('#quantity');
-    const totalElement = document.querySelector('#total');
-
-    if (orderForm && modal && modalText && modalClose) {
-      orderForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const name = nameInput?.value.trim() || 'клієнт';
-        const phone = phoneInput?.value.trim() || '';
-        const qty = quantityInput?.value || '1';
-        const total = totalElement?.textContent || String((parseInt(qty) || 1) * PRICE_PER_ITEM);
-
-        modalText.textContent = `Дякуємо, ${name}! Ваше замовлення на ${qty} шт. прийнято. Сума: ${total} ₴. Ми зв'яжемося з вами за телефоном ${phone}.`;
-        modal.classList.add('show');
-
-        orderForm.reset();
-        if (quantityInput) quantityInput.value = 1;
-        if (totalElement) totalElement.textContent = PRICE_PER_ITEM;
+    // Завантажуємо міста при завантаженні сторінки
+    loadCities().then(cities => {
+      cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city.Ref;
+        option.textContent = city.Description;
+        citiesSelect.appendChild(option);
       });
+    });
 
-      modalClose.addEventListener('click', () => {
-        modal.classList.remove('show');
+    // Оновлюємо відділення при зміні міста
+    citiesSelect.addEventListener('change', async (event) => {
+      const cityRef = event.target.value;
+      warehousesSelect.innerHTML = '<option value="" disabled selected>Завантаження відділень...</option>';
+      const warehouses = await loadWarehouses(cityRef);
+      warehousesSelect.innerHTML = '<option value="" disabled selected>Виберіть відділення</option>';
+      warehouses.forEach(warehouse => {
+        const option = document.createElement('option');
+        option.value = warehouse.Description;
+        option.textContent = warehouse.Description;
+        warehousesSelect.appendChild(option);
       });
-    }
+    });
+
+    if (!form || !modal || !modalText || !modalCloseBtn) return;
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const name = form.querySelector('#name').value;
+        const phone = form.querySelector('#phone').value;
+        const city = citiesSelect.options[citiesSelect.selectedIndex].text;
+        const warehouse = warehousesSelect.value;
+        const quantity = document.getElementById('quantity').textContent;
+        const total = document.getElementById('total').textContent;
+        const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+        // Тут ви можете відправити ці дані на ваш сервер
+        console.log({
+            name,
+            phone,
+            city,
+            warehouse,
+            quantity,
+            total,
+            paymentMethod
+        });
+
+        // Показуємо модальне вікно з підтвердженням замовлення
+        modalText.textContent = `Дякуємо, ${name}! Ваше замовлення прийнято. Ми зв'яжемося з вами за номером ${phone} для уточнення деталей доставки.`;
+        modal.classList.add('active');
+    });
+
+    modalCloseBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
   }
 
   function setupFaqAccordions() {
