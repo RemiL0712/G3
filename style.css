@@ -257,8 +257,8 @@ body {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
   object-fit: contain;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
 
 .carousel-slide.active {
