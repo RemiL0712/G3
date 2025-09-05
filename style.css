@@ -528,6 +528,52 @@ section h2::after {
     padding: 0 5px; /* Невеликий відступ, щоб текст лейбла не торкався полів */
 }
 
+/*==================================================
+  Стилі для Dropdown з пошуком
+  ==================================================*/
+
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  list-style: none;
+  z-index: 50;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-list li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-list li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Додатково оновіть стилі для label, щоб він правильно працював з input */
+.form-group input#warehouses-input:focus + label,
+.form-group input#warehouses-input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    background-color: var(--card-bg-color);
+    left: 40px;
+}
+
 /* Стилі для плаваючого лейбла при фокусі або заповненні */
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label,

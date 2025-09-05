@@ -215,12 +215,11 @@
                             </select>
                             <label for="cities-select">Місто</label>
                         </div>
-                        <div class="form-group floating-label-group">
+                        <div class="form-group floating-label-group dropdown-container">
                             <i class="fas fa-map-marker-alt icon"></i>
-                            <select id="warehouses-select" required>
-                                <option value="" disabled selected>Виберіть відділення</option>
-                            </select>
-                            <label for="warehouses-select">Відділення Нової Пошти</label>
+                            <input type="text" id="warehouses-input" placeholder=" " autocomplete="off" required>
+                            <label for="warehouses-input">Відділення Нової Пошти</label>
+                            <ul id="warehouses-list" class="dropdown-list"></ul>
                         </div>
                         <div class="form-group payment-options-group">
                             <label class="form-label">Спосіб оплати:</label>

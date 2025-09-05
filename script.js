@@ -204,77 +204,128 @@ document.addEventListener('DOMContentLoaded', () => {
   /**
    * Обробляє відправку форми замовлення та показує модальне вікно.
    */
-  function setupOrderForm() {
-    const form = document.getElementById('order-form');
-    const citiesSelect = document.getElementById('cities-select');
-    const warehousesSelect = document.getElementById('warehouses-select');
-    const modal = document.getElementById('order-success');
-    const modalText = document.getElementById('order-success-text');
-    const modalCloseBtn = document.getElementById('order-success-close');
+function setupOrderForm() {
+  const form = document.getElementById('order-form');
+  const citiesSelect = document.getElementById('cities-select');
+  const warehousesInput = document.getElementById('warehouses-input');
+  const warehousesList = document.getElementById('warehouses-list');
+  const modal = document.getElementById('order-success');
+  const modalText = document.getElementById('order-success-text');
+  const modalCloseBtn = document.getElementById('order-success-close');
+  let allWarehouses = []; // Змінна для зберігання всіх відділень
 
-    // Завантажуємо міста при завантаженні сторінки
-    loadCities().then(cities => {
-      cities.forEach(city => {
-        const option = document.createElement('option');
-        option.value = city.Ref;
-        option.textContent = city.Description;
-        citiesSelect.appendChild(option);
-      });
+  // Завантажуємо міста при завантаженні сторінки
+  loadCities().then(cities => {
+    cities.forEach(city => {
+      const option = document.createElement('option');
+      option.value = city.Ref;
+      option.textContent = city.Description;
+      citiesSelect.appendChild(option);
     });
+  });
 
-    // Оновлюємо відділення при зміні міста
-    citiesSelect.addEventListener('change', async (event) => {
-      const cityRef = event.target.value;
-      warehousesSelect.innerHTML = '<option value="" disabled selected>Завантаження відділень...</option>';
-      const warehouses = await loadWarehouses(cityRef);
-      warehousesSelect.innerHTML = '<option value="" disabled selected>Виберіть відділення</option>';
-      warehouses.forEach(warehouse => {
-        const option = document.createElement('option');
-        option.value = warehouse.Description;
-        option.textContent = warehouse.Description;
-        warehousesSelect.appendChild(option);
-      });
-    });
+  // Оновлюємо відділення при зміні міста
+  citiesSelect.addEventListener('change', async (event) => {
+    const cityRef = event.target.value;
+    warehousesInput.value = '';
+    warehousesInput.placeholder = 'Завантаження відділень...';
+    warehousesInput.disabled = true;
+    warehousesList.innerHTML = '';
 
-    if (!form || !modal || !modalText || !modalCloseBtn) return;
+    allWarehouses = await loadWarehouses(cityRef);
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+    warehousesInput.disabled = false;
+    warehousesInput.placeholder = 'Почніть вводити назву відділення...';
+  });
 
-        const name = form.querySelector('#name').value;
-        const phone = form.querySelector('#phone').value;
-        const city = citiesSelect.options[citiesSelect.selectedIndex].text;
-        const warehouse = warehousesSelect.value;
-        const quantity = document.getElementById('quantity').textContent;
-        const total = document.getElementById('total').textContent;
-        const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+  // Обробка пошуку у полі введення
+  warehousesInput.addEventListener('input', () => {
+    const searchTerm = warehousesInput.value.toLowerCase();
+    warehousesList.innerHTML = ''; // Очищаємо старий список
 
-        // Тут ви можете відправити ці дані на ваш сервер
-        console.log({
-            name,
-            phone,
-            city,
-            warehouse,
-            quantity,
-            total,
-            paymentMethod
+    if (searchTerm.length > 1) {
+      const filteredWarehouses = allWarehouses.filter(w =>
+        w.Description.toLowerCase().includes(searchTerm)
+      );
+
+      filteredWarehouses.forEach(warehouse => {
+        const li = document.createElement('li');
+        li.textContent = warehouse.Description;
+        li.setAttribute('data-value', warehouse.Description);
+        li.addEventListener('click', () => {
+          warehousesInput.value = warehouse.Description;
+          warehousesList.innerHTML = '';
         });
+        warehousesList.appendChild(li);
+      });
+    }
+  });
 
-        // Показуємо модальне вікно з підтвердженням замовлення
-        modalText.textContent = `Дякуємо, ${name}! Ваше замовлення прийнято. Ми зв'яжемося з вами за номером ${phone} для уточнення деталей доставки.`;
-        modal.classList.add('active');
-    });
+  // Обробка фокусу для відображення списку, якщо він є
+  warehousesInput.addEventListener('focus', () => {
+    if (warehousesInput.value === '' && allWarehouses.length > 0) {
+       // Якщо поле пусте, можна показати кілька перших відділень
+       const topWarehouses = allWarehouses.slice(0, 5);
+       warehousesList.innerHTML = '';
+       topWarehouses.forEach(warehouse => {
+         const li = document.createElement('li');
+         li.textContent = warehouse.Description;
+         li.setAttribute('data-value', warehouse.Description);
+         li.addEventListener('click', () => {
+           warehousesInput.value = warehouse.Description;
+           warehousesList.innerHTML = '';
+         });
+         warehousesList.appendChild(li);
+       });
+    }
+  });
 
-    modalCloseBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
+  // Закриття списку, якщо клік поза межами контейнера
+  document.addEventListener('click', (event) => {
+    if (!event.target.closest('.dropdown-container')) {
+      warehousesList.innerHTML = '';
+    }
+  });
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
-  }
+  if (!form || !modal || !modalText || !modalCloseBtn) return;
+
+  form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const name = form.querySelector('#name').value;
+      const phone = form.querySelector('#phone').value;
+      const city = citiesSelect.options[citiesSelect.selectedIndex].text;
+      const warehouse = warehousesInput.value;
+      const quantity = document.getElementById('quantity').textContent;
+      const total = document.getElementById('total').textContent;
+      const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+      console.log({
+          name,
+          phone,
+          city,
+          warehouse,
+          quantity,
+          total,
+          paymentMethod
+      });
+
+      modalText.textContent = `Дякуємо, ${name}! Ваше замовлення прийнято. Ми зв'яжемося з вами за номером ${phone} для уточнення деталей доставки.`;
+      modal.classList.add('show'); // Використовуйте 'show' клас
+      form.reset();
+      document.getElementById('quantity').textContent = '1';
+  });
+
+  modalCloseBtn.addEventListener('click', () => {
+      modal.classList.remove('show');
+  });
+
+  modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+          modal.classList.remove('show');
+      }
+  });
+}
 
   function setupFaqAccordions() {
     const faqItems = document.querySelectorAll('.faq-item');
